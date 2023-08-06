@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">OPass</string>
+    <string name="title_schedule">Schedule</string>
+    <string name="dayOfWeek_mon">Mon</string>
+    <string name="dayOfWeek_tue">Tue</string>
+    <string name="dayOfWeek_wed">Wed</string>
+    <string name="dayOfWeek_thu">Thu</string>
+    <string name="dayOfWeek_fri">Fri</string>
+    <string name="dayOfWeek_sat">Sat</string>
+    <string name="dayOfWeek_sun">Sun</string>
+    <string name="title_events">Events</string>
+    <string name="subtitle_events">select a event</string>
+</resources>
