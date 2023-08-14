@@ -1,17 +1,36 @@
 package app.opass.ccip.schedule
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -26,17 +45,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.opass.ccip.BackIcon
 import app.opass.ccip.LocalDestNavigator
 import app.opass.ccip.compose.R
+import app.opass.ccip.i18n.LocalizedString
+import app.opass.ccip.misc.BackIcon
+import app.opass.ccip.misc.dayOfWeekLabel
+import app.opass.ccip.misc.format1
+import app.opass.ccip.navGraphViewModel
 import app.opass.ccip.theme.AppTheme
 import app.opass.ccip.theme.Theme
-import app.opass.ccip.theme.tag
-import app.opass.ccip.theme.tagContainer
-import app.opass.ccip.theme.timeTag
-import app.opass.ccip.theme.titleBackGround
-import app.opass.ccip.util.dayOfWeekLabel
-import app.opass.ccip.util.format1
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -44,19 +61,18 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import org.koin.androidx.compose.koinViewModel
 import java.net.URL
 
 @RootNavGraph(start = false)
 @Destination
 @Composable
 fun ScheduleView(
-    scheduleUrl: String,
-    vm: ScheduleViewModel = koinViewModel(),
+    scheduleUrl: URL,
+    vm: ScheduleViewModel = navGraphViewModel(),
     navigator: DestinationsNavigator
 ) {
     LaunchedEffect(Unit) {
-        vm.update(URL(scheduleUrl))
+        vm.update(scheduleUrl)
     }
     CompositionLocalProvider(
         LocalDestNavigator provides navigator
@@ -71,7 +87,7 @@ fun ScheduleScreen(
     dates: List<LocalDate>,
     sessions: Map<LocalDate, List<Session>>,
     selectedDate: MutableState<LocalDate?>,
-    navigator: DestinationsNavigator = LocalDestNavigator.current,
+    navigator: DestinationsNavigator = LocalDestNavigator.current
 ) {
     val todaySessions = sessions[selectedDate.value]
     Scaffold(
@@ -79,7 +95,7 @@ fun ScheduleScreen(
             TopAppBar(
                 navigationIcon = { BackIcon(navigator) },
                 title = { Text(stringResource(R.string.title_schedule)) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = titleBackGround)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Theme.c.surfaceVariant)
             )
         }
     ) {
@@ -98,7 +114,8 @@ fun ScheduleScreen(
 @Composable
 fun EmptySessions() {
     Box(
-        Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         Text("No Sessions", style = Theme.t.displayMedium)
     }
@@ -108,13 +125,13 @@ fun EmptySessions() {
 fun DateTab(
     dates: Collection<LocalDate>,
     selected: LocalDate? = null,
-    onClick: (LocalDate) -> Unit = {},
+    onClick: (LocalDate) -> Unit = {}
 ) {
     Row(
         Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(titleBackGround),
+            .background(Theme.c.surfaceVariant),
         horizontalArrangement = Arrangement.spacedBy(
             32.dp,
             alignment = Alignment.CenterHorizontally
@@ -131,18 +148,22 @@ fun DateTabItem(
     day: Int,
     dayOfWeek: DayOfWeek,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     val textStyle =
-        if (isSelected) TextStyle.Default.copy(
-            color = Theme.c.primary,
-            fontSize = 14.sp,
-            fontWeight = FontWeight(500)
-        ) else TextStyle.Default.copy(
-            color = Theme.c.outline,
-            fontSize = 14.sp,
-            fontWeight = FontWeight(500)
-        )
+        if (isSelected) {
+            TextStyle.Default.copy(
+                color = Theme.c.primary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500)
+            )
+        } else {
+            TextStyle.Default.copy(
+                color = Theme.c.outline,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500)
+            )
+        }
     Column(
         Modifier
             .fillMaxHeight()
@@ -157,11 +178,14 @@ fun DateTabItem(
             .fillMaxWidth()
             .height(3.dp)
         Box(
-            if (isSelected) m.background(
-                color = Theme.c.primary,
-                shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
-            )
-            else m
+            if (isSelected) {
+                m.background(
+                    color = Theme.c.primary,
+                    shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
+                )
+            } else {
+                m
+            }
         )
     }
 }
@@ -191,9 +215,9 @@ fun StartTimeTitle(start: LocalDateTime) {
     Box(
         Modifier
             .fillMaxWidth()
-            .background(titleBackGround)
+            .background(Theme.c.surfaceVariant)
             .padding(horizontal = 24.dp, vertical = 16.dp),
-        contentAlignment = Alignment.CenterStart,
+        contentAlignment = Alignment.CenterStart
     ) {
         Text(
             start.time.format1(),
@@ -219,23 +243,23 @@ fun SessionItem(session: Session) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                LocationTag(session.room.name)
+                LocationTag(session.room.name.value)
                 TimeRange(session.start.time, session.end.time)
             }
             Box {
-                Text(session.title)
+                Text(session.title.value)
             }
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                SessionTypeTag(session.type.name)
+                SessionTypeTag(session.type.name.value)
                 for (tag in session.tags) {
-                    NormalTag(tag.name)
+                    NormalTag(tag.name.value)
                 }
             }
         }
-        Image(Icons.Default.KeyboardArrowRight, "", Modifier.size(24.dp))
+        Icon(Icons.Default.KeyboardArrowRight, "", Modifier.size(24.dp))
     }
 }
 
@@ -244,7 +268,7 @@ private fun TimeRange(start: LocalTime, end: LocalTime) {
     Box(contentAlignment = Alignment.Center) {
         Text(
             "${start.format1()} ~ ${end.format1()}",
-            style = Theme.t.labelLarge.copy(color = timeTag)
+            style = Theme.t.labelLarge
         )
     }
 }
@@ -265,11 +289,11 @@ private fun LocationTag(value: String) {
 private fun SessionTypeTag(value: String) {
     Box(
         Modifier
-            .background(tagContainer, RoundedCornerShape(4.dp))
+            .background(Theme.c.surfaceVariant, RoundedCornerShape(4.dp))
             .padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(value, style = Theme.t.labelLarge.copy(color = tag))
+        Text(value, style = Theme.t.labelLarge, color = Theme.c.onSurfaceVariant)
     }
 }
 
@@ -277,11 +301,15 @@ private fun SessionTypeTag(value: String) {
 private fun NormalTag(value: String) {
     Box(
         Modifier
-            .border(width = 2.dp, color = tagContainer, shape = RoundedCornerShape(size = 4.dp))
+            .border(
+                width = 1.dp,
+                color = Theme.c.surfaceVariant,
+                shape = RoundedCornerShape(size = 4.dp)
+            )
             .padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(value, style = Theme.t.labelLarge.copy(color = tag))
+        Text(value, style = Theme.t.labelLarge, color = Theme.c.onSurfaceVariant)
     }
 }
 
@@ -290,12 +318,20 @@ private fun NormalTag(value: String) {
 fun SchedulePreview() {
     val speaker = Speaker(
         "1",
-        "蓬蓬博士",
-        "蓬蓬博士作為研究蓬蓬鬆餅的第一權威人士，他曾經在倫敦蓬蓬大學任教，且在《紐約時報》、《美國商業周刊》、《蓬蓬新報》等國際媒體工作多年，撰寫了大量關於蓬蓬鬆餅的報導，蓬蓬博士的研究領域更涉及了各類甜食的製作及甜點。"
+        LocalizedString(mapOf("zh" to "蓬蓬博士"), default = "Dr. Pancake"),
+        LocalizedString(
+            default = "蓬蓬博士作為研究蓬蓬鬆餅的第一權威人士，他曾經在倫敦蓬蓬大學任教，且在《紐約時報》、《美國商業周刊》、《蓬蓬新報》等國際媒體工作多年，撰寫了大量關於蓬蓬鬆餅的報導，蓬蓬博士的研究領域更涉及了各類甜食的製作及甜點。"
+        )
     )
-    val type = SessionType("1", "非常開放開放開放開放開放開放式議程")
-    val room = Room("1", "R0")
-    val tag = SessionTag("1", "鬆餅")
+    val type = SessionType(
+        "1",
+        LocalizedString(
+            mapOf("zh" to "非常開放開放開放開放開放開放式議程"),
+            default = "very loooooooooooooooooong tag"
+        )
+    )
+    val room = Room("1", LocalizedString(default = "R0"))
+    val tag = SessionTag("1", LocalizedString(mapOf("zh" to "鬆餅"), default = "pancake"))
     val sessions = listOf(
         Session(
             id = "1",
@@ -304,8 +340,8 @@ fun SchedulePreview() {
             room = room,
             start = LocalDateTime(2023, 7, 29, 9, 10, 0),
             end = LocalDateTime(2023, 7, 29, 10, 0, 0),
-            title = "蓬蓬鬆餅大集合",
-            description = "",
+            title = LocalizedString(default = "蓬蓬鬆餅大集合"),
+            description = LocalizedString.empty,
             language = "中文",
             tags = listOf(tag, tag, tag, tag)
         ),
@@ -316,9 +352,12 @@ fun SchedulePreview() {
             room = room,
             start = LocalDateTime(2023, 7, 29, 10, 10, 0),
             end = LocalDateTime(2023, 7, 29, 11, 0, 0),
-            title = "蓬蓬鬆餅大集合",
-            description = "",
-            language = "中文",
+            title = LocalizedString(
+                mapOf("zh" to "[中文] 蓬蓬鬆餅大集合"),
+                default = "[Eng] Collection of Pancakes"
+            ),
+            description = LocalizedString.empty,
+            language = "English",
             tags = listOf(tag)
         ),
         Session(
@@ -328,11 +367,11 @@ fun SchedulePreview() {
             room = room,
             start = LocalDateTime(2023, 7, 29, 10, 10, 0),
             end = LocalDateTime(2023, 7, 29, 11, 0, 0),
-            title = "蓬蓬鬆餅大集合",
-            description = "",
+            title = LocalizedString(default = "蓬蓬鬆餅大集合"),
+            description = LocalizedString.empty,
             language = "中文",
             tags = listOf(tag)
-        ),
+        )
     )
     val dates = listOf(
         LocalDate(2023, 7, 29),
@@ -342,10 +381,10 @@ fun SchedulePreview() {
     val m = mapOf(
         LocalDate(2023, 7, 29) to sessions,
         LocalDate(2023, 7, 30) to sessions,
-        LocalDate(2023, 7, 31) to sessions,
+        LocalDate(2023, 7, 31) to sessions
     )
-    val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
-    AppTheme {
+    val selectedDate = remember { mutableStateOf<LocalDate?>(dates[0]) }
+    AppTheme(true) {
         Surface {
             ScheduleScreen(dates, m, selectedDate)
         }

@@ -1,12 +1,21 @@
 package app.opass.ccip
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import app.opass.ccip.home.HomeViewModel
 import app.opass.ccip.home.PortalClient
 import app.opass.ccip.schedule.ScheduleViewModel
+import app.opass.ccip.setting.SettingSerializer
+import app.opass.ccip.setting.Settings
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
@@ -26,12 +35,21 @@ class MainApplication : Application() {
 
         val misc = module {
             single {
-                HttpClient(CIO) {
+                Json {
+                    ignoreUnknownKeys = true
+                    coerceInputValues = true
+                }
+            }
+            single {
+                HttpClient(OkHttp) {
                     install(ContentNegotiation) {
-                        json(Json {
-                            ignoreUnknownKeys = true
-                            coerceInputValues = true
-                        })
+                        json(get())
+                    }
+                    install(Logging) {
+                        level = LogLevel.INFO
+                    }
+                    install(HttpCache) {
+                        publicStorage(FileStorage(androidContext().cacheDir))
                     }
                 }
             }
@@ -48,3 +66,8 @@ class MainApplication : Application() {
         }
     }
 }
+
+val Context.dataStore: DataStore<Settings> by dataStore(
+    "settings.json",
+    SettingSerializer
+)

@@ -1,10 +1,9 @@
-package app.opass.ccip.util
+package app.opass.ccip.misc
 
 import app.opass.ccip.compose.R
 import kotlinx.datetime.LocalTime
 import java.time.DayOfWeek
 import java.util.Locale
-
 
 val dayOfWeekLabel = mapOf(
     DayOfWeek.MONDAY to R.string.dayOfWeek_mon,
@@ -13,9 +12,12 @@ val dayOfWeekLabel = mapOf(
     DayOfWeek.THURSDAY to R.string.dayOfWeek_thu,
     DayOfWeek.FRIDAY to R.string.dayOfWeek_fri,
     DayOfWeek.SATURDAY to R.string.dayOfWeek_sat,
-    DayOfWeek.SUNDAY to R.string.dayOfWeek_sun,
+    DayOfWeek.SUNDAY to R.string.dayOfWeek_sun
 )
 
 fun isChinese() = Locale.getDefault().language == "zh"
 
+/*
+    HH:mm
+ */
 fun LocalTime.format1(): String = "$hour:${minute.toString().padStart(2, '0')}"

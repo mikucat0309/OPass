@@ -1,7 +1,7 @@
 package app.opass.ccip.schedule
 
+import app.opass.ccip.i18n.LocalizedString
 import kotlinx.datetime.LocalDateTime
-
 
 typealias SessionId = String
 typealias SpeakerId = String
@@ -14,7 +14,7 @@ data class Schedule(
     val speakers: List<Speaker>,
     val sessionTypes: List<SessionType>,
     val rooms: List<Room>,
-    val tags: List<SessionTag>,
+    val tags: List<SessionTag>
 )
 
 data class Session(
@@ -23,36 +23,35 @@ data class Session(
     val room: Room,
     val start: LocalDateTime,
     val end: LocalDateTime,
-    val title: String,
+    val title: LocalizedString,
     val speakers: List<Speaker>,
-    val description: String = "",
+    val description: LocalizedString = LocalizedString.empty,
     val language: String? = null,
     val tags: List<SessionTag> = emptyList(),
     val coWrite: String? = null,
     val qa: String? = null,
     val slide: String? = null,
     val record: String? = null,
-    val uri: String? = null,
+    val uri: String? = null
 )
 
 data class Speaker(
     val id: SpeakerId,
-    val name: String,
-    val bio: String,
+    val name: LocalizedString,
+    val bio: LocalizedString
 )
 
 data class SessionType(
     val id: SessionTypeId,
-    val name: String,
+    val name: LocalizedString
 )
 
 data class Room(
     val id: RoomId,
-    val name: String,
+    val name: LocalizedString
 )
 
 data class SessionTag(
     val id: SessionTagId,
-    val name: String,
+    val name: LocalizedString
 )
-

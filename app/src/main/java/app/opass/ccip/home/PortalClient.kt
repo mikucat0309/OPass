@@ -14,8 +14,9 @@ class PortalClient : KoinComponent {
         return client.get("$baseUrl/events/").body()
     }
 
-    suspend fun getEvent(event: Event): EventDetail {
-        return client.get("$baseUrl/events/${event.id}").body<EventDetailDto>().toEventDetail()
+    suspend fun getEventDetail(eventId: EventId): EventDetail {
+        return client.get("$baseUrl/events/$eventId").body<EventDetailDto>()
+            .toEventDetail()
     }
 
     companion object {

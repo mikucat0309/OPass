@@ -3,8 +3,8 @@
 
 package app.opass.ccip.home
 
-import app.opass.ccip.util.UrlSerializer
-import app.opass.ccip.util.isChinese
+import app.opass.ccip.i18n.LocalizedString
+import app.opass.ccip.misc.UrlSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -14,18 +14,23 @@ import java.net.URL
 data class EventDto(
     val event_id: EventId,
     val display_name: I18n,
-    val logo_url: URL,
+    val logo_url: URL
 ) {
     @Serializable
     data class I18n(
         val zh: String,
-        val en: String,
+        val en: String
     )
 
     fun toEvent(): Event {
         return Event(
             id = event_id,
-            name = if (isChinese()) display_name.zh else display_name.en,
+            name = LocalizedString(
+                mapOf(
+                    "zh" to display_name.zh,
+                    "en" to display_name.en
+                )
+            ),
             logoUrl = logo_url
         )
     }
@@ -39,24 +44,29 @@ data class EventDetailDto(
     val event_website: URL,
     val event_date: TimeRange,
     val publish: TimeRange,
-    val features: List<FeatureDto>,
+    val features: List<FeatureDto>
 ) {
     @Serializable
     data class I18n(
         val zh: String,
-        val en: String,
+        val en: String
     )
 
     @Serializable
     data class TimeRange(
         val start: String,
-        val end: String,
+        val end: String
     )
 
     fun toEventDetail(): EventDetail {
         return EventDetail(
             id = event_id,
-            name = if (isChinese()) display_name.zh else display_name.en,
+            name = LocalizedString(
+                mapOf(
+                    "zh" to display_name.zh,
+                    "en" to display_name.en
+                )
+            ),
             logoUrl = logo_url,
             website = event_website,
             start = event_date.start,
@@ -80,11 +90,16 @@ data class FeatureDto(
     @Serializable
     data class I18n(
         val zh: String,
-        val en: String,
+        val en: String
     )
 
     fun toFeature(): Feature {
-        val label = if (isChinese()) display_text.zh else display_text.en
+        val label = LocalizedString(
+            mapOf(
+                "zh" to display_text.zh,
+                "en" to display_text.en
+            )
+        )
         return when (feature) {
             FeatureType.FAST_PASS -> FastPassFeature(label)
             FeatureType.SCHEDULE -> ScheduleFeature(label, URL(url))
@@ -109,40 +124,40 @@ data class WifiInfoDto(
 )
 
 @Serializable
-enum class FeatureType(val type: String) {
+enum class FeatureType {
     @SerialName("fastpass")
-    FAST_PASS("fastpass"),
+    FAST_PASS,
 
     @SerialName("schedule")
-    SCHEDULE("schedule"),
+    SCHEDULE,
 
     @SerialName("announcement")
-    ANNOUNCEMENT("announcement"),
+    ANNOUNCEMENT,
 
     @SerialName("puzzle")
-    PUZZLE("puzzle"),
+    PUZZLE,
 
     @SerialName("ticket")
-    TICKET("ticket"),
+    TICKET,
 
     @SerialName("telegram")
-    TELEGRAM("telegram"),
+    TELEGRAM,
 
     @SerialName("im")
-    IM("im"),
+    IM,
 
     @SerialName("sponsors")
-    SPONSORS("sponsors"),
+    SPONSORS,
 
     @SerialName("staffs")
-    STAFFS("staffs"),
+    STAFFS,
 
     @SerialName("venue")
-    VENUE("venue"),
+    VENUE,
 
     @SerialName("webview")
-    WEBVIEW("webview"),
+    WEBVIEW,
 
     @SerialName("wifi")
-    WIFI("wifi");
+    WIFI;
 }

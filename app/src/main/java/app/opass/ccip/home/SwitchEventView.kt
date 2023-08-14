@@ -1,6 +1,5 @@
 package app.opass.ccip.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -28,32 +25,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.opass.ccip.LocalDestNavigator
-import app.opass.ccip.LocalNavGraphViewModelStoreOwner
 import app.opass.ccip.compose.R
 import app.opass.ccip.destinations.HomeViewDestination
+import app.opass.ccip.i18n.LocalizedString
+import app.opass.ccip.misc.BackIcon
+import app.opass.ccip.navGraphViewModel
 import app.opass.ccip.theme.AppTheme
 import app.opass.ccip.theme.Theme
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import org.koin.androidx.compose.koinViewModel
 import java.net.URL
 
 @RootNavGraph
 @Destination
 @Composable
 fun SwitchEventView(
-    vm: HomeViewModel = koinViewModel(viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current!!),
+    vm: HomeViewModel = navGraphViewModel(),
     navigator: DestinationsNavigator
 ) {
     CompositionLocalProvider(
         LocalDestNavigator provides navigator
     ) {
         SwitchEventScreen(vm.events) {
-            vm.selectedEvent = it
-            navigator.navigate(HomeViewDestination)
+            vm.loadRemoteEventDetail(it.id)
+            navigator.popBackStack(HomeViewDestination.route, false)
         }
     }
 }
@@ -62,21 +59,13 @@ fun SwitchEventView(
 @Composable
 fun SwitchEventScreen(
     events: List<Event>,
-    navigator: DestinationsNavigator = LocalDestNavigator.current,
     onClick: (Event) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    Box(Modifier
-                        .clickable { navigator.popBackStack() }
-                        .padding(16.dp)) {
-                        Image(
-                            Icons.Outlined.ArrowBack,
-                            "back"
-                        )
-                    }
+                    BackIcon()
                 },
                 title = {
                     Column {
@@ -95,7 +84,7 @@ fun SwitchEventScreen(
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(160.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(events) {
                     EventCard(it) { onClick(it) }
@@ -113,7 +102,7 @@ fun EventCard(event: Event, onClick: () -> Unit = {}) {
         verticalArrangement = Arrangement.Center
     ) {
         Card(
-            Modifier.aspectRatio(16.0f / 9),
+            Modifier.aspectRatio(16.0f / 9)
         ) {
             Box(
                 Modifier
@@ -123,24 +112,28 @@ fun EventCard(event: Event, onClick: () -> Unit = {}) {
             ) {
                 AsyncImage(
                     event.logoUrl.toString(),
-                    event.name,
+                    event.name.value,
                     contentScale = ContentScale.Fit,
-                    alignment = Alignment.Center,
+                    alignment = Alignment.Center
                 )
             }
         }
-        Text(event.name, style = Theme.t.labelLarge)
+        Text(event.name.value, style = Theme.t.labelLarge)
     }
 }
 
 @Preview
 @Composable
 fun SwitchEventPreview() {
-    val event = Event("1", "COSCUP 2023", URL("https://coscup.org/2020/images/logo-512-white.png"))
+    val event = Event(
+        "1",
+        LocalizedString(default = "COSCUP 2023"),
+        URL("https://coscup.org/2020/images/logo-512-white.png")
+    )
     val events = listOf(event, event, event, event, event, event, event)
     AppTheme {
         Surface {
-            SwitchEventScreen(events, EmptyDestinationsNavigator)
+            SwitchEventScreen(events)
         }
     }
 }
