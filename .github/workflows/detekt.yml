@@ -10,6 +10,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  security-events: write
+
 env:
   DETEKT_VERSION: 1.23.4
   DETEKT_COMPOSE_VERSION: 0.3.8
