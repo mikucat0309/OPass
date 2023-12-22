@@ -1,21 +1,14 @@
-name: Scan with Detekt
+name: Build Dev APK
 
 on:
   push:
     branches:
-      - "main"
-  pull_request:
-    branches:
-      - "main"
-
+      - 'main'
   workflow_dispatch:
 
-permissions:
-  security-events: write
-
 jobs:
-  scan:
-    name: Scan
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -30,10 +23,11 @@ jobs:
         with:
           gradle-version: 8.4
 
-      - name: Run Detekt
-        continue-on-error: true
-        run: gradle :app:detekt
+      - name: Build APK
+        run: gradle :app:assembleRelease
 
-      - uses: github/codeql-action/upload-sarif@v2
+      - uses: actions/upload-artifact@v4
         with:
-          sarif_file: app/build/reports/detekt/detekt.sarif
+          name: apk-${{ github.sha }}
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
