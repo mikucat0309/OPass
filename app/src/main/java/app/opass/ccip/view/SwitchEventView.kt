@@ -29,6 +29,8 @@ import app.opass.ccip.viewmodel.SwitchEventViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Destination
 @Composable
@@ -40,15 +42,15 @@ fun SwitchEventView(
     vm.reset()
     navigator.popBackStack(HomeViewDestination.route, false)
   }
-  val events = vm.events.cASWL().value
+  val events = vm.events.cASWL().value.toImmutableList()
   LaunchedEffect(Unit) { vm.fetchEvents() }
   SwitchEventScreen(events, navigator) { vm.fetchEventConfig(it.id) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SwitchEventScreen(
-    events: List<Event>,
+private fun SwitchEventScreen(
+    events: ImmutableList<Event>,
     navigator: DestinationsNavigator,
     onClick: (Event) -> Unit = {}
 ) {
@@ -61,36 +63,44 @@ fun SwitchEventScreen(
                 Text("活動", style = Theme.t.headlineSmall)
                 Text("", style = Theme.t.bodySmall)
               }
-            })
-      }) { padding ->
-        Box(Modifier.padding(padding).padding(16.dp)) {
-          LazyVerticalGrid(
-              columns = GridCells.Adaptive(160.dp),
-              verticalArrangement = Arrangement.spacedBy(16.dp),
-              horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                items(events) { EventCard(it) { onClick(it) } }
-              }
-        }
+            },
+        )
+      },
+  ) { padding ->
+    Box(
+        Modifier.padding(padding).padding(16.dp),
+    ) {
+      LazyVerticalGrid(
+          columns = GridCells.Adaptive(160.dp),
+          verticalArrangement = Arrangement.spacedBy(16.dp),
+          horizontalArrangement = Arrangement.spacedBy(16.dp),
+      ) {
+        items(events) { EventCard(it) { onClick(it) } }
       }
+    }
+  }
 }
 
 @Composable
-fun EventCard(event: Event, onClick: () -> Unit = {}) {
+private fun EventCard(event: Event, onClick: () -> Unit = {}) {
   Column(
       Modifier.clickable { onClick() },
       horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center) {
-        Card(Modifier.aspectRatio(16.0f / 9)) {
-          Box(
-              Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
-              contentAlignment = Alignment.Center) {
-                AsyncImage(
-                    event.logoUrl.toString(),
-                    event.name.current,
-                    contentScale = ContentScale.Fit,
-                    alignment = Alignment.Center)
-              }
-        }
-        Text(event.name.current, style = Theme.t.labelLarge)
+      verticalArrangement = Arrangement.Center,
+  ) {
+    Card(Modifier.aspectRatio(16.0f / 9)) {
+      Box(
+          Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
+          contentAlignment = Alignment.Center,
+      ) {
+        AsyncImage(
+            event.logoUrl.toString(),
+            event.name.current,
+            contentScale = ContentScale.Fit,
+            alignment = Alignment.Center,
+        )
       }
+    }
+    Text(event.name.current, style = Theme.t.labelLarge)
+  }
 }

@@ -12,10 +12,12 @@ import app.opass.ccip.view.destinations.HomeViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun BackIcon(navigator: DestinationsNavigator) {
+fun BackIcon(navigator: DestinationsNavigator, modifier: Modifier = Modifier) {
   Icon(
       Icons.Default.ArrowBack,
       "back",
-      Modifier.clickable { navigator.popBackStack(HomeViewDestination.route, false) }
-          .padding(horizontal = 16.dp))
+      modifier
+          .clickable { navigator.popBackStack() }
+          .padding(horizontal = 16.dp),
+  )
 }
