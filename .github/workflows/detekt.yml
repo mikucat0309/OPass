@@ -3,10 +3,14 @@ name: Scan with Detekt
 on:
   push:
     branches:
-      - "main"
+      - main
+    paths:
+      - 'app/config/detekt.yml'
+      - 'app/src/main/java/**'
+      - 'app/src/test/java/**'
   pull_request:
     branches:
-      - "main"
+      - main
 
   workflow_dispatch:
 
