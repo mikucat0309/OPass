@@ -66,11 +66,11 @@ android {
 
 tasks.withType<Detekt>().configureEach {
   reports {
-    html.required.set(true) // observe findings in your browser with structure and code snippets
-    xml.required.set(false) // checkstyle like format mainly for integrations like Jenkins
-    txt.required.set(false) // similar to the console output, contains issue signature to manually edit baseline files
-    sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with GitHub Code Scanning
-    md.required.set(false) // simple Markdown format
+    html.required.set(true)
+    xml.required.set(false)
+    txt.required.set(false)
+    sarif.required.set(true)
+    md.required.set(false)
   }
 }
 
@@ -134,7 +134,7 @@ dependencies {
   implementation("io.ktor", "ktor-client-logging", ktorVersion)
 
   // Logging
-  implementation("org.slf4j:slf4j-android:1.7.36")
+  implementation("org.slf4j", "slf4j-android", "1.7.36")
 
   // DI
   implementation("io.insert-koin", "koin-android", "3.5.0")

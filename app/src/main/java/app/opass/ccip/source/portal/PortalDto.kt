@@ -42,7 +42,7 @@ data class EventConfigDto(
 ) : Unpackable<EventConfig> {
   override fun unpack(): EventConfig {
     // compatibility
-    val ccipDefaultUrl = features.first { it.feature == "fastpass" }.url!!
+    val ccipDefaultUrl = features.firstOrNull { it.feature == "fastpass" }?.url
     val features =
         features.map { f ->
           if (f.url == null && (f.feature == "ticket" || f.feature == "announcement")) {

@@ -2,6 +2,7 @@ package app.opass.ccip.view
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -45,6 +45,7 @@ import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.ui.theme.DefaultTheme
 import app.opass.ccip.ui.theme.Theme
 import app.opass.ccip.view.destinations.EnterTokenViewDestination
+import app.opass.ccip.view.destinations.SwitchEventViewDestination
 import app.opass.ccip.viewmodel.HomeViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
@@ -63,7 +64,6 @@ fun HomeView(
 ) {
   val eventConfig = vm.eventConfig.cASWL().value
   val attendee = vm.attendee.cASWL().value
-  LaunchedEffect(true) { vm.fetchEventConfig("SITCON_2022") }
   HomeScreen(eventConfig, attendee, navigator)
 }
 
@@ -86,9 +86,7 @@ private fun HomeScreen(
               Icon(
                   painterResource(R.drawable.sync_alt),
                   "switch event",
-                  Modifier
-                      //                        .clickable {
-                      // navigator.navigate(SwitchEventViewDestination) }
+                  Modifier.clickable { navigator.navigate(SwitchEventViewDestination) }
                       .padding(16.dp),
               )
             },

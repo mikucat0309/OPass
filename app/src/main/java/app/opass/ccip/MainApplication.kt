@@ -7,6 +7,7 @@ import app.opass.ccip.source.ccip.RemoteCcipClient
 import app.opass.ccip.source.portal.RemotePortalClient
 import app.opass.ccip.viewmodel.EnterTokenViewModel
 import app.opass.ccip.viewmodel.HomeViewModel
+import app.opass.ccip.viewmodel.SwitchEventViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.cache.HttpCache
@@ -55,6 +56,7 @@ class MainApplication : Application() {
     val viewModelModule = module {
       viewModelOf(::HomeViewModel)
       viewModelOf(::EnterTokenViewModel)
+      viewModelOf(::SwitchEventViewModel)
     }
 
     startKoin {
