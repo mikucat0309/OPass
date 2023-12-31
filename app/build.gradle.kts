@@ -134,7 +134,8 @@ dependencies {
   implementation("io.ktor", "ktor-client-logging", ktorVersion)
 
   // Logging
-  implementation("org.slf4j", "slf4j-android", "1.7.36")
+//  implementation("org.slf4j", "slf4j-android", "1.7.36")
+  implementation("uk.uuid.slf4j", "slf4j-android", "2.0.7-0")
 
   // DI
   implementation("io.insert-koin", "koin-android", "3.5.0")

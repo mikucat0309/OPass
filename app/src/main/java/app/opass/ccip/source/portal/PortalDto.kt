@@ -3,7 +3,7 @@ package app.opass.ccip.source.portal
 import app.opass.ccip.I18nText
 import app.opass.ccip.model.Event
 import app.opass.ccip.model.EventConfig
-import app.opass.ccip.model.EventDate
+import app.opass.ccip.model.DateTimeRange
 import app.opass.ccip.model.EventFeature
 import app.opass.ccip.model.ExternalUrlEventFeature
 import app.opass.ccip.model.SimpleInternalUrlEventFeature
@@ -13,6 +13,7 @@ import app.opass.ccip.parseISO8601Instant
 import app.opass.ccip.source.Unpackable
 import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
+import app.opass.ccip.view.destinations.ScheduleViewDestination
 import java.net.URL
 import kotlinx.serialization.Serializable
 
@@ -39,8 +40,8 @@ data class EventConfigDto(
     val event_date: EventDateDto,
     val publish: EventDateDto,
     val features: List<EventFeatureDto>,
-) : Unpackable<EventConfig> {
-  override fun unpack(): EventConfig {
+)  {
+  fun unpack(): EventConfig {
     // compatibility
     val ccipDefaultUrl = features.firstOrNull { it.feature == "fastpass" }?.url
     val features =
@@ -59,6 +60,7 @@ data class EventConfigDto(
         URL(event_website),
         event_date.unpack(),
         publish.unpack(),
+
         features.map { it.unpack() },
     )
   }
@@ -68,9 +70,9 @@ data class EventConfigDto(
 data class EventDateDto(
     val start: String,
     val end: String,
-) : Unpackable<EventDate> {
+) : Unpackable<DateTimeRange> {
   override fun unpack() =
-      EventDate(
+      DateTimeRange(
           parseISO8601Instant(start),
           parseISO8601Instant(end),
       )
@@ -106,6 +108,7 @@ data class EventFeatureDto(
               url!!,
               when (feature) {
                 "ticket" -> EnterTokenViewDestination
+                "schedule" -> ScheduleViewDestination
                 else -> HomeViewDestination
               },
               visible_roles,

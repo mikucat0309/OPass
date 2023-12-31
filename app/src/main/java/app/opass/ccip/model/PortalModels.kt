@@ -11,9 +11,7 @@ import app.opass.ccip.view.destinations.HomeViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import java.net.URL
-import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 data class Event(
     val id: String,
@@ -22,18 +20,13 @@ data class Event(
 )
 
 data class EventConfig(
-    val id: String,
-    val name: I18nText,
-    val logoUrl: URL,
-    val websiteUrl: URL,
-    val eventDate: EventDate,
-    val publishDate: EventDate,
-    val features: List<EventFeature>,
-)
-
-data class EventDate(
-    val start: Instant,
-    val end: Instant,
+  val id: String,
+  val name: I18nText,
+  val logoUrl: URL,
+  val websiteUrl: URL,
+  val eventDateTimeRange: DateTimeRange,
+  val publishDateTimeRange: DateTimeRange,
+  val features: List<EventFeature>,
 )
 
 sealed interface EventFeature {
