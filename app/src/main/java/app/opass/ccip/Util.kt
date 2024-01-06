@@ -35,8 +35,9 @@ fun LocaleListCompat.toList(): List<Locale> {
   return list.toList()
 }
 
-fun <T> suppress(scope: () -> T): T? = try {
-  scope()
-} catch (e: Exception) {
-  null
-}
+fun <T> suppress(scope: () -> T): T? =
+    try {
+      scope()
+    } catch (e: Exception) {
+      null
+    }

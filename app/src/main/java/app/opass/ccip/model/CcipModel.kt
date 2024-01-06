@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
 
 class CcipModel(
-  private val remote: RemoteCcipClient,
+    private val remote: RemoteCcipClient,
 ) : KoinComponent {
   var baseUrl: String
     get() = remote.baseUrl
@@ -36,8 +36,7 @@ class CcipModel(
     var result = template
     val currentAttendee = _attendee.value
     if (currentAttendee != null) {
-      result = result
-          .replace("{token}", currentAttendee.token)
+      result = result.replace("{token}", currentAttendee.token)
       // TODO support more pattern
     }
     return result

@@ -42,7 +42,7 @@ class MainApplication : Application() {
       single {
         HttpClient(OkHttp) {
           install(ContentNegotiation) { json(get()) }
-          install(Logging) { level = LogLevel.HEADERS }
+          install(Logging) { level = LogLevel.ALL }
           install(HttpCache) { publicStorage(FileStorage(androidContext().cacheDir)) }
         }
       }

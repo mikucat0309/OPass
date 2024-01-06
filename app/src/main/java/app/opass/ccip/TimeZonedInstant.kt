@@ -8,7 +8,7 @@ import kotlinx.datetime.toInstant
 data class TimeZonedInstant(
     val dateTime: LocalDateTime,
     val timeZone: TimeZone,
-): Comparable<TimeZonedInstant> {
+) : Comparable<TimeZonedInstant> {
   val instant: Instant
     get() = dateTime.toInstant(timeZone)
 

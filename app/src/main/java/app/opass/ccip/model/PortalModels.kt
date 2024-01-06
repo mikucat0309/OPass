@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import app.opass.ccip.I18nText
-import app.opass.ccip.compose.R
 import app.opass.ccip.view.destinations.DirectionDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -20,13 +19,13 @@ data class Event(
 )
 
 data class EventConfig(
-  val id: String,
-  val name: I18nText,
-  val logoUrl: URL,
-  val websiteUrl: URL,
-  val eventDateTimeRange: DateTimeRange,
-  val publishDateTimeRange: DateTimeRange,
-  val features: List<EventFeature>,
+    val id: String,
+    val name: I18nText,
+    val logoUrl: URL,
+    val websiteUrl: URL,
+    val eventDateTimeRange: DateTimeRange,
+    val publishDateTimeRange: DateTimeRange,
+    val features: List<EventFeature>,
 )
 
 sealed interface EventFeature {
@@ -35,7 +34,7 @@ sealed interface EventFeature {
   val visibleRoles: List<String>?
   val iconUrl: URL?
 
-  @get:DrawableRes val icon: Int
+  @get:DrawableRes val icon: Int?
 
   fun onClick(activity: Activity, navigator: DestinationsNavigator) {}
 }
@@ -50,10 +49,10 @@ data class SimpleInternalUrlEventFeature(
     override val name: I18nText,
     override val url: String,
     override val destination: DirectionDestinationSpec,
+    @get:DrawableRes override val icon: Int?,
     override val visibleRoles: List<String>? = null,
     override val iconUrl: URL? = null,
 ) : InternalUrlEventFeature, KoinComponent {
-  override val icon: Int = R.drawable.badge_36
 
   override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
     navigator.navigate(destination)
@@ -64,10 +63,10 @@ data class ExternalUrlEventFeature(
     override val type: String,
     override val name: I18nText,
     val url: String,
+    @get:DrawableRes override val icon: Int?,
     override val visibleRoles: List<String>? = null,
     override val iconUrl: URL? = null,
 ) : EventFeature, KoinComponent {
-  override val icon: Int = R.drawable.badge_36
 
   override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -79,9 +78,9 @@ data class WebViewEventFeature(
     override val type: String,
     override val name: I18nText,
     override val url: String,
+    @get:DrawableRes override val icon: Int?,
     override val visibleRoles: List<String>? = null,
     override val iconUrl: URL? = null,
-    override val icon: Int = R.drawable.badge_36,
 ) : InternalUrlEventFeature {
   override val destination: DirectionDestination = HomeViewDestination
 }
@@ -90,7 +89,7 @@ data class WifiEventFeature(
     override val type: String,
     override val name: I18nText,
     val wifi: Map<String, String>,
+    @get:DrawableRes override val icon: Int?,
     override val visibleRoles: List<String>? = null,
     override val iconUrl: URL? = null,
-    override val icon: Int = R.drawable.wifi_36,
 ) : EventFeature

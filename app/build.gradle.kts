@@ -1,7 +1,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-  id("com.android.application") version "8.2.0"
+  id("com.android.application") version "8.2.1"
   id("org.jetbrains.kotlin.android") version "1.9.20"
   id("org.jetbrains.kotlin.plugin.serialization") version "1.9.20"
   id("com.google.devtools.ksp") version "1.9.20-1.0.14"
@@ -12,10 +12,12 @@ plugins {
 
 android {
   namespace = "app.opass.ccip.compose"
+  testNamespace = "app.opass.ccip.compose"
   compileSdk = 34
 
   defaultConfig {
     applicationId = "app.opass.ccip.compose"
+    testApplicationId = "app.opass.ccip.compose"
     minSdk = 33
     targetSdk = 34
     versionCode = 1

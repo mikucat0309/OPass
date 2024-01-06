@@ -186,9 +186,9 @@ private fun FeatureButton(
             contentDescription = feature.name.current,
             contentScale = ContentScale.Fit,
         )
-      } else {
+      } else if (feature.icon != null) {
         Icon(
-            painterResource(feature.icon),
+            painterResource(feature.icon!!),
             feature.name.current,
         )
       }
@@ -211,6 +211,7 @@ private fun FeatureButtonPreview() {
               "wifi",
               I18nText(Locale.ENGLISH to "WiFi"),
               mapOf(),
+              R.drawable.wifi_36,
           ),
       )
     }

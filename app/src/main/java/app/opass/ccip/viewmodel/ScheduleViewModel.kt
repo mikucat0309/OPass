@@ -6,11 +6,11 @@ import app.opass.ccip.model.CcipModel
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.PortalModel
 import app.opass.ccip.model.ScheduleModel
+import java.net.URL
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.net.URL
 
 class ScheduleViewModel : ViewModel(), KoinComponent {
   private val ccipModel: CcipModel by inject()
@@ -19,7 +19,6 @@ class ScheduleViewModel : ViewModel(), KoinComponent {
   private val dispatcher: CoroutineDispatcher by inject()
 
   val sessions = scheduleModel.sessions
-  val eventConfig = portalModel.eventConfig
 
   fun fetchSessions() {
     val eventConfig = portalModel.eventConfig.value ?: return

@@ -1,5 +1,6 @@
 package app.opass.ccip.view
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -83,6 +84,7 @@ private fun SwitchEventScreen(
 
 @Composable
 private fun EventCard(event: Event, onClick: () -> Unit = {}) {
+  Log.d("coil", event.logoUrl.toString())
   Column(
       Modifier.clickable { onClick() },
       horizontalAlignment = Alignment.CenterHorizontally,
