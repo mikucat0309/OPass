@@ -182,7 +182,7 @@ private fun FeatureButton(
     ) {
       if (feature.iconUrl != null) {
         AsyncImage(
-            model = feature.iconUrl.toString(),
+            model = feature.iconUrl,
             contentDescription = feature.name.current,
             contentScale = ContentScale.Fit,
         )

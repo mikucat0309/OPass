@@ -112,7 +112,7 @@ data class EventFeatureDto(
               wifi!!.associate { it.unpack() },
               defaultIcon,
               visible_roles,
-              icon?.let { URL(it) },
+              icon,
           )
       "fastpass",
       "announcement",
@@ -129,7 +129,7 @@ data class EventFeatureDto(
               },
               defaultIcon,
               visible_roles,
-              icon?.let { URL(it) },
+              icon,
           )
       "telegram",
       "im", ->
@@ -139,7 +139,7 @@ data class EventFeatureDto(
               url!!,
               defaultIcon,
               visible_roles,
-              icon?.let { URL(it) },
+              icon,
           )
       "puzzle",
       "webview",
@@ -152,7 +152,7 @@ data class EventFeatureDto(
               url!!,
               defaultIcon,
               visible_roles,
-              icon?.let { URL(it) },
+              icon,
           )
       else -> throw IllegalArgumentException("unknown feature type")
     }

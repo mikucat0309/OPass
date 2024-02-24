@@ -32,7 +32,7 @@ sealed interface EventFeature {
   val type: String
   val name: I18nText
   val visibleRoles: List<String>?
-  val iconUrl: URL?
+  val iconUrl: String?
 
   @get:DrawableRes val icon: Int?
 
@@ -45,13 +45,13 @@ sealed interface InternalUrlEventFeature : EventFeature {
 }
 
 data class SimpleInternalUrlEventFeature(
-    override val type: String,
-    override val name: I18nText,
-    override val url: String,
-    override val destination: DirectionDestinationSpec,
-    @get:DrawableRes override val icon: Int?,
-    override val visibleRoles: List<String>? = null,
-    override val iconUrl: URL? = null,
+  override val type: String,
+  override val name: I18nText,
+  override val url: String,
+  override val destination: DirectionDestinationSpec,
+  @get:DrawableRes override val icon: Int?,
+  override val visibleRoles: List<String>? = null,
+  override val iconUrl: String? = null,
 ) : InternalUrlEventFeature, KoinComponent {
 
   override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
@@ -60,12 +60,12 @@ data class SimpleInternalUrlEventFeature(
 }
 
 data class ExternalUrlEventFeature(
-    override val type: String,
-    override val name: I18nText,
-    val url: String,
-    @get:DrawableRes override val icon: Int?,
-    override val visibleRoles: List<String>? = null,
-    override val iconUrl: URL? = null,
+  override val type: String,
+  override val name: I18nText,
+  val url: String,
+  @get:DrawableRes override val icon: Int?,
+  override val visibleRoles: List<String>? = null,
+  override val iconUrl: String? = null,
 ) : EventFeature, KoinComponent {
 
   override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
@@ -75,21 +75,21 @@ data class ExternalUrlEventFeature(
 }
 
 data class WebViewEventFeature(
-    override val type: String,
-    override val name: I18nText,
-    override val url: String,
-    @get:DrawableRes override val icon: Int?,
-    override val visibleRoles: List<String>? = null,
-    override val iconUrl: URL? = null,
+  override val type: String,
+  override val name: I18nText,
+  override val url: String,
+  @get:DrawableRes override val icon: Int?,
+  override val visibleRoles: List<String>? = null,
+  override val iconUrl: String? = null,
 ) : InternalUrlEventFeature {
   override val destination: DirectionDestination = HomeViewDestination
 }
 
 data class WifiEventFeature(
-    override val type: String,
-    override val name: I18nText,
-    val wifi: Map<String, String>,
-    @get:DrawableRes override val icon: Int?,
-    override val visibleRoles: List<String>? = null,
-    override val iconUrl: URL? = null,
+  override val type: String,
+  override val name: I18nText,
+  val wifi: Map<String, String>,
+  @get:DrawableRes override val icon: Int?,
+  override val visibleRoles: List<String>? = null,
+  override val iconUrl: String? = null,
 ) : EventFeature
