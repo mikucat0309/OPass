@@ -34,17 +34,20 @@ data class AnnouncementDto(
 @Serializable
 data class AttendeeDto(
     var event_id: String,
-    var token: String,
     var user_id: String,
     var first_use: Long,
     var role: String,
     var scenarios: List<ScenarioDto>,
+    // compatibility
+    var token: String? = null,
+    var public_token: String? = null,
     var attr: JsonElement = buildJsonObject {},
-) : Unpackable<Attendee> {
-  override fun unpack() =
+) {
+  fun unpack(token: String) =
       Attendee(
           event_id,
           token,
+          public_token,
           user_id,
           Instant.fromEpochSeconds(first_use),
           role,

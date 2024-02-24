@@ -10,6 +10,7 @@ import kotlinx.serialization.json.buildJsonObject
 data class Attendee(
     val eventId: String,
     val token: String,
+    val publicToken: String?,
     val userId: String,
     val firstUse: Instant,
     val role: String,

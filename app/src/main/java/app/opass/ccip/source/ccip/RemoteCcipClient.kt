@@ -18,7 +18,7 @@ class RemoteCcipClient(
   override suspend fun getStatus(token: String): Result<Attendee> {
     val resp = httpClient.get("$baseUrl/status") { parameter("token", token) }
     return when (resp.status) {
-      HttpStatusCode.OK -> Result.success(resp.body<AttendeeDto>().unpack())
+      HttpStatusCode.OK -> Result.success(resp.body<AttendeeDto>().unpack(token))
       HttpStatusCode.BadRequest -> Result.failure(IllegalStateException("Invalid token"))
       else -> Result.failure(IllegalStateException("Unknown error"))
     }
@@ -30,7 +30,7 @@ class RemoteCcipClient(
   ): Result<Attendee> {
     val resp = httpClient.get("$baseUrl/use/$scenario") { parameter("token", token) }
     return when (resp.status) {
-      HttpStatusCode.OK -> Result.success(resp.body<AttendeeDto>().unpack())
+      HttpStatusCode.OK -> Result.success(resp.body<AttendeeDto>().unpack(token))
       HttpStatusCode.BadRequest ->
           Result.failure(
               IllegalStateException(resp.getErrorMessage()),
