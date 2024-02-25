@@ -1,5 +1,6 @@
 package app.opass.ccip
 
+import android.annotation.SuppressLint
 import android.app.Application
 import app.opass.ccip.model.CcipModel
 import app.opass.ccip.model.PortalModel
@@ -11,6 +12,9 @@ import app.opass.ccip.viewmodel.EnterTokenViewModel
 import app.opass.ccip.viewmodel.HomeViewModel
 import app.opass.ccip.viewmodel.ScheduleViewModel
 import app.opass.ccip.viewmodel.SwitchEventViewModel
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.util.DebugLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.cache.HttpCache
@@ -27,8 +31,11 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
-class MainApplication : Application() {
+class MainApplication : Application(), ImageLoaderFactory {
   override fun onCreate() {
     super.onCreate()
 
@@ -41,12 +48,41 @@ class MainApplication : Application() {
       }
       single {
         HttpClient(OkHttp) {
+          if (Config.DEBUG) {
+            engine {
+              config {
+                val trustManager = @SuppressLint("CustomX509TrustManager")
+                object : X509TrustManager {
+
+                  @SuppressLint("TrustAllX509TrustManager")
+                  override fun checkClientTrusted(
+                    chain: Array<out X509Certificate>?,
+                    authType: String?
+                  ) {
+                  }
+
+                  @SuppressLint("TrustAllX509TrustManager")
+                  override fun checkServerTrusted(
+                    chain: Array<out X509Certificate>?,
+                    authType: String?
+                  ) {
+                  }
+
+                  override fun getAcceptedIssuers() = emptyArray<X509Certificate>()
+                }
+                val sslContext = SSLContext.getInstance("TLS").apply {
+                  init(null, arrayOf(trustManager), null)
+                }
+                sslSocketFactory(sslContext.socketFactory, trustManager)
+              }
+            }
+          }
           install(ContentNegotiation) { json(get()) }
-          install(Logging) { level = LogLevel.ALL }
+          install(Logging) { level = if (Config.DEBUG) LogLevel.ALL else LogLevel.NONE }
           install(HttpCache) { publicStorage(FileStorage(androidContext().cacheDir)) }
         }
       }
-      single { RemotePortalClient(get(), "https://portal.opass.app") }
+      single { RemotePortalClient(get(), Config.PORTAL_BASE_URL) }
       single { RemoteCcipClient(get()) }
       single { RemoteScheduleClient(get()) }
       single { Dispatchers.IO }
@@ -71,5 +107,11 @@ class MainApplication : Application() {
       modules(globalModule, modelModule)
       modules(viewModelModule)
     }
+  }
+
+  override fun newImageLoader(): ImageLoader {
+    return ImageLoader.Builder(this)
+        .apply { if (Config.DEBUG) logger(DebugLogger()) }
+        .build()
   }
 }
