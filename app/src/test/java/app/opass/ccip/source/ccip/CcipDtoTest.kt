@@ -1,6 +1,6 @@
 package app.opass.ccip.source.ccip
 
-import app.opass.ccip.I18nText
+import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Announcement
 import app.opass.ccip.model.Attendee
 import app.opass.ccip.model.Scenario
@@ -71,21 +71,23 @@ class CcipDtoTest :
       "Unpack ScenarioDto" { scenarioDto.unpack().shouldBe(expectedScenario) }
 
       "Unpack AttendeeDto" {
+        val token = "7bab41e5-7755-459a-b65d-17448c5f40d3"
         val dto =
             AttendeeDto(
                 "Test 2087",
-                "7bab41e5-7755-459a-b65d-17448c5f40d3",
                 "User 0",
                 instantDto,
                 "attendee",
                 listOf(
                     scenarioDto,
                 ),
+                token,
             )
         val expected =
             Attendee(
                 "Test 2087",
-                "7bab41e5-7755-459a-b65d-17448c5f40d3",
+                token,
+                null,
                 "User 0",
                 instant,
                 "attendee",
@@ -93,6 +95,6 @@ class CcipDtoTest :
                     expectedScenario,
                 ),
             )
-        dto.unpack().shouldBe(expected)
+        dto.unpack(token).shouldBe(expected)
       }
     })

@@ -1,4 +1,4 @@
-package app.opass.ccip
+package app.opass.ccip.misc
 
 import androidx.core.os.LocaleListCompat
 import java.util.Locale

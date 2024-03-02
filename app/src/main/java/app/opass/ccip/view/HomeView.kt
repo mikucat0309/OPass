@@ -1,6 +1,7 @@
 package app.opass.ccip.view
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,15 +37,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.opass.ccip.I18nText
 import app.opass.ccip.compose.R
+import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Attendee
 import app.opass.ccip.model.EventConfig
 import app.opass.ccip.model.EventFeature
+import app.opass.ccip.model.ExternalUrlEventFeature
+import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.ui.theme.DefaultTheme
 import app.opass.ccip.ui.theme.Theme
-import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.SwitchEventViewDestination
 import app.opass.ccip.viewmodel.HomeViewModel
 import coil.compose.AsyncImage
@@ -74,11 +76,7 @@ private fun HomeScreen(
     attendee: Attendee?,
     navigator: DestinationsNavigator,
 ) {
-  val enabledFeatures =
-      eventConfig
-          ?.features
-          ?.filter { it.visibleRoles.isNullOrEmpty() || attendee?.role in it.visibleRoles!! }
-          ?.toImmutableList() ?: emptyList<EventFeature>().toImmutableList()
+  val features = eventConfig?.features ?: emptyList()
   Scaffold(
       topBar = {
         TopAppBar(
@@ -100,15 +98,15 @@ private fun HomeScreen(
             actions = { Icon(Icons.Outlined.Settings, "settings", Modifier.padding(16.dp)) },
             colors =
                 TopAppBarDefaults.topAppBarColors(
-                    containerColor = Theme.c.primaryContainer,
+                    containerColor = Theme.c.surfaceVariant,
                 ),
         )
       },
   ) { pv ->
     Column(Modifier.padding(pv)) {
-      EventHeader(eventConfig, attendee?.userId, navigator)
+      EventHeader(eventConfig, attendee?.userId)
       if (eventConfig != null) {
-        FeatureGrid(enabledFeatures, navigator)
+        FeatureGrid(features.toImmutableList(), navigator, attendee == null)
       }
     }
   }
@@ -118,10 +116,9 @@ private fun HomeScreen(
 private fun EventHeader(
     eventConfig: EventConfig?,
     name: String?,
-    navigator: DestinationsNavigator,
 ) {
   Column(
-      Modifier.fillMaxWidth().background(Theme.c.primaryContainer),
+      Modifier.fillMaxWidth().background(Theme.c.surfaceVariant),
       horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     AsyncImage(
@@ -132,7 +129,7 @@ private fun EventHeader(
     )
     if (eventConfig?.features?.any { it.type == "ticket" } == true) {
       AssistChip(
-          onClick = { navigator.navigate(EnterTokenViewDestination) },
+          onClick = {},
           label = { Text(name ?: "Guest") },
           leadingIcon = { Icon(Icons.Default.Person, "account avatar") },
           colors =
@@ -151,15 +148,35 @@ private fun EventHeader(
 private fun FeatureGrid(
     list: ImmutableList<EventFeature>,
     navigator: DestinationsNavigator,
+    isGuest: Boolean,
 ) {
-  val activity = LocalContext.current as Activity
   LazyVerticalGrid(
       columns = GridCells.Adaptive(72.dp),
       Modifier.fillMaxWidth().padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp),
       horizontalArrangement = Arrangement.spacedBy(24.dp),
   ) {
-    items(list) { FeatureButton(it) { it.onClick(activity, navigator) } }
+    items(list) { FeatureButton(it, onClick = onClick(it, navigator, isGuest)) }
+  }
+}
+
+@Composable
+private fun onClick(
+    feature: EventFeature,
+    navigator: DestinationsNavigator,
+    isGuest: Boolean
+): () -> Unit {
+  val activity = LocalContext.current as Activity
+  return when (feature) {
+    is InternalUrlEventFeature -> {
+      { feature.onClick(navigator, isGuest) }
+    }
+    is ExternalUrlEventFeature -> {
+      { feature.onClick(navigator, isGuest, activity) }
+    }
+    is WifiEventFeature -> {
+      { Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show() }
+    }
   }
 }
 
@@ -175,16 +192,14 @@ private fun FeatureButton(
   ) {
     IconButton(
         onClick = onClick,
-        Modifier.background(Theme.c.surfaceVariant, RoundedCornerShape(16.dp))
-            .size(72.dp)
-            .padding(16.dp),
+        Modifier.background(Theme.c.surfaceVariant, RoundedCornerShape(16.dp)).size(72.dp),
         enabled = enabled,
     ) {
       if (feature.iconUrl != null) {
         AsyncImage(
             model = feature.iconUrl,
             contentDescription = feature.name.current,
-            contentScale = ContentScale.Fit,
+            Modifier.size(36.dp),
         )
       } else if (feature.icon != null) {
         Icon(
@@ -210,6 +225,7 @@ private fun FeatureButtonPreview() {
           WifiEventFeature(
               "wifi",
               I18nText(Locale.ENGLISH to "WiFi"),
+              false,
               mapOf(),
               R.drawable.wifi_36,
           ),

@@ -13,8 +13,8 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.opass.ccip.LocalSystemLocaleList
-import app.opass.ccip.toList
+import app.opass.ccip.misc.LocalSystemLocaleList
+import app.opass.ccip.misc.toList
 import app.opass.ccip.ui.theme.DefaultTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import kotlinx.coroutines.flow.StateFlow

@@ -1,13 +1,12 @@
 package app.opass.ccip.source.portal
 
-import app.opass.ccip.I18nText
-import app.opass.ccip.TimeZonedInstant
 import app.opass.ccip.compose.R
+import app.opass.ccip.misc.I18nText
+import app.opass.ccip.misc.TimeZonedInstant
 import app.opass.ccip.model.DateTimeRange
 import app.opass.ccip.model.Event
 import app.opass.ccip.model.ExternalUrlEventFeature
-import app.opass.ccip.model.SimpleInternalUrlEventFeature
-import app.opass.ccip.model.WebViewEventFeature
+import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
@@ -104,7 +103,7 @@ class PortalDtoTest :
             dto.unpack().shouldBe(expected)
           }
 
-          "Unpack UrlEventFeatureDto - fastpass" {
+          "Unpack EventFeatureDto - fastpass" {
             val dto =
                 EventFeatureDto(
                     "fastpass",
@@ -112,50 +111,53 @@ class PortalDtoTest :
                     url = urlDto,
                 )
             val expected =
-                SimpleInternalUrlEventFeature(
+                InternalUrlEventFeature(
                     "fastpass",
                     i18nText,
+                    true,
                     urlDto,
-                    HomeViewDestination,
                     R.drawable.badge_36,
-                )
-            dto.unpack().shouldBe(expected)
-          }
-          "Unpack UrlEventFeatureDto - announcement" {
-            val dto =
-                EventFeatureDto(
-                    "announcement",
-                    i18nTextDto,
-                    url = urlDto,
-                )
-            val expected =
-                SimpleInternalUrlEventFeature(
-                    "announcement",
-                    i18nText,
-                    urlDto,
                     HomeViewDestination,
-                    R.drawable.campaign_36,
                 )
             dto.unpack().shouldBe(expected)
           }
-          "Unpack UrlEventFeatureDto - ticket" {
+          "Unpack EventFeatureDto - announcement" {
             val dto =
                 EventFeatureDto(
-                    "ticket",
+                    "announcement",
                     i18nTextDto,
                     url = urlDto,
                 )
             val expected =
-                SimpleInternalUrlEventFeature(
-                    "ticket",
+                InternalUrlEventFeature(
+                    "announcement",
                     i18nText,
+                    false,
                     urlDto,
-                    EnterTokenViewDestination,
-                    R.drawable.local_activity_36,
+                    R.drawable.campaign_36,
+                    HomeViewDestination,
                 )
             dto.unpack().shouldBe(expected)
           }
-          "Unpack UrlEventFeatureDto - schedule" {
+          "Unpack EventFeatureDto - ticket" {
+            val dto =
+                EventFeatureDto(
+                    "ticket",
+                    i18nTextDto,
+                    url = urlDto,
+                )
+            val expected =
+                InternalUrlEventFeature(
+                    "ticket",
+                    i18nText,
+                    true,
+                    urlDto,
+                    R.drawable.local_activity_36,
+                    EnterTokenViewDestination,
+                )
+            dto.unpack().shouldBe(expected)
+          }
+          "Unpack EventFeatureDto - schedule" {
             val dto =
                 EventFeatureDto(
                     "schedule",
@@ -163,59 +165,40 @@ class PortalDtoTest :
                     url = urlDto,
                 )
             val expected =
-                SimpleInternalUrlEventFeature(
+                InternalUrlEventFeature(
                     "schedule",
                     i18nText,
+                    false,
                     url = urlDto,
-                    ScheduleViewDestination,
                     R.drawable.history_edu_36,
+                    ScheduleViewDestination,
                 )
             dto.unpack().shouldBe(expected)
           }
-
           listOf(
-                  "puzzle" to R.drawable.extension_36,
-                  "webview" to R.drawable.public_36,
-                  "venue" to R.drawable.map_36,
-                  "sponsors" to R.drawable.handshake_36,
-                  "staffs" to R.drawable.people_36,
+                  Triple("puzzle", true, R.drawable.extension_36),
+                  Triple("webview", false, R.drawable.public_36),
+                  Triple("venue", false, R.drawable.map_36),
+                  Triple("sponsors", false, R.drawable.handshake_36),
+                  Triple("staffs", false, R.drawable.people_36),
+                  Triple("telegram", false, R.drawable.telegram_36),
+                  Triple("im", false, R.drawable.message_36),
               )
               .forEach { params ->
-                "Unpack WebViewEventFeatureDto - ${params.first}" {
+                "Unpack EventFeatureDto - ${params.first}" {
                   val dto =
                       EventFeatureDto(
                           params.first,
                           i18nTextDto,
-                          url = urlDto,
-                      )
-                  val expected =
-                      WebViewEventFeature(
-                          params.first,
-                          i18nText,
-                          url = urlDto,
-                          params.second,
-                      )
-                  dto.unpack().shouldBe(expected)
-                }
-              }
-          listOf(
-                  "telegram" to R.drawable.telegram_36,
-                  "im" to R.drawable.message_36,
-              )
-              .forEach { params ->
-                "Unpack ExternalUrlEventFeature - ${params.first}" {
-                  val dto =
-                      EventFeatureDto(
-                          params.first,
-                          i18nTextDto,
-                          url = urlDto,
+                          urlDto,
                       )
                   val expected =
                       ExternalUrlEventFeature(
                           params.first,
                           i18nText,
-                          urlDto,
                           params.second,
+                          urlDto,
+                          params.third,
                       )
                   dto.unpack().shouldBe(expected)
                 }
@@ -235,11 +218,12 @@ class PortalDtoTest :
                 WifiEventFeature(
                     "wifi",
                     i18nText,
-                    wifi =
-                        mapOf(
-                            "Free Wifi" to "password",
-                        ),
-                    R.drawable.wifi_36)
+                    false,
+                    mapOf(
+                        "Free Wifi" to "password",
+                    ),
+                    R.drawable.wifi_36,
+                )
             dto.unpack().shouldBe(expected)
           }
         },

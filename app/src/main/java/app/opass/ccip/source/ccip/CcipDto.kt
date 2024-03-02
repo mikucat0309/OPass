@@ -1,6 +1,6 @@
 package app.opass.ccip.source.ccip
 
-import app.opass.ccip.I18nText
+import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Announcement
 import app.opass.ccip.model.Attendee
 import app.opass.ccip.model.Scenario

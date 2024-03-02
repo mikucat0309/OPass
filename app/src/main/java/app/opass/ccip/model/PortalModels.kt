@@ -4,9 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.DrawableRes
-import app.opass.ccip.I18nText
-import app.opass.ccip.view.destinations.DirectionDestination
-import app.opass.ccip.view.destinations.HomeViewDestination
+import app.opass.ccip.misc.I18nText
+import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import java.net.URL
@@ -31,65 +30,54 @@ data class EventConfig(
 sealed interface EventFeature {
   val type: String
   val name: I18nText
-  val visibleRoles: List<String>?
-  val iconUrl: String?
-
+  val isRestricted: Boolean
   @get:DrawableRes val icon: Int?
-
-  fun onClick(activity: Activity, navigator: DestinationsNavigator) {}
+  val iconUrl: String?
 }
 
-sealed interface InternalUrlEventFeature : EventFeature {
+interface UrlEventFeature {
   val url: String
-  val destination: DirectionDestinationSpec
 }
 
-data class SimpleInternalUrlEventFeature(
-  override val type: String,
-  override val name: I18nText,
-  override val url: String,
-  override val destination: DirectionDestinationSpec,
-  @get:DrawableRes override val icon: Int?,
-  override val visibleRoles: List<String>? = null,
-  override val iconUrl: String? = null,
-) : InternalUrlEventFeature, KoinComponent {
+data class InternalUrlEventFeature(
+    override val type: String,
+    override val name: I18nText,
+    override val isRestricted: Boolean,
+    override val url: String,
+    @get:DrawableRes override val icon: Int?,
+    val destination: DirectionDestinationSpec,
+    override val iconUrl: String? = null,
+) : EventFeature, UrlEventFeature, KoinComponent {
 
-  override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
-    navigator.navigate(destination)
+  fun onClick(navigator: DestinationsNavigator, isGuest: Boolean) {
+    navigator.navigate(if (isRestricted && isGuest) EnterTokenViewDestination else destination)
   }
 }
 
 data class ExternalUrlEventFeature(
-  override val type: String,
-  override val name: I18nText,
-  val url: String,
-  @get:DrawableRes override val icon: Int?,
-  override val visibleRoles: List<String>? = null,
-  override val iconUrl: String? = null,
-) : EventFeature, KoinComponent {
+    override val type: String,
+    override val name: I18nText,
+    override val isRestricted: Boolean,
+    override val url: String,
+    @get:DrawableRes override val icon: Int?,
+    override val iconUrl: String? = null,
+) : EventFeature, UrlEventFeature, KoinComponent {
 
-  override fun onClick(activity: Activity, navigator: DestinationsNavigator) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    activity.startActivity(intent)
+  fun onClick(navigator: DestinationsNavigator, isGuest: Boolean, activity: Activity) {
+    if (isRestricted && isGuest) {
+      navigator.navigate(EnterTokenViewDestination)
+    } else {
+      val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+      activity.startActivity(intent)
+    }
   }
 }
 
-data class WebViewEventFeature(
-  override val type: String,
-  override val name: I18nText,
-  override val url: String,
-  @get:DrawableRes override val icon: Int?,
-  override val visibleRoles: List<String>? = null,
-  override val iconUrl: String? = null,
-) : InternalUrlEventFeature {
-  override val destination: DirectionDestination = HomeViewDestination
-}
-
 data class WifiEventFeature(
-  override val type: String,
-  override val name: I18nText,
-  val wifi: Map<String, String>,
-  @get:DrawableRes override val icon: Int?,
-  override val visibleRoles: List<String>? = null,
-  override val iconUrl: String? = null,
+    override val type: String,
+    override val name: I18nText,
+    override val isRestricted: Boolean,
+    val wifi: Map<String, String>,
+    @get:DrawableRes override val icon: Int?,
+    override val iconUrl: String? = null,
 ) : EventFeature

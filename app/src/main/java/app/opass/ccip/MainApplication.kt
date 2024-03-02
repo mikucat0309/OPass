@@ -1,6 +1,5 @@
 package app.opass.ccip
 
-import android.annotation.SuppressLint
 import android.app.Application
 import app.opass.ccip.model.CcipModel
 import app.opass.ccip.model.PortalModel
@@ -23,6 +22,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import javax.net.ssl.SSLContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
@@ -31,9 +31,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import java.security.cert.X509Certificate
-import javax.net.ssl.SSLContext
-import javax.net.ssl.X509TrustManager
 
 class MainApplication : Application(), ImageLoaderFactory {
   override fun onCreate() {
@@ -51,29 +48,11 @@ class MainApplication : Application(), ImageLoaderFactory {
           if (Config.DEBUG) {
             engine {
               config {
-                val trustManager = @SuppressLint("CustomX509TrustManager")
-                object : X509TrustManager {
-
-                  @SuppressLint("TrustAllX509TrustManager")
-                  override fun checkClientTrusted(
-                    chain: Array<out X509Certificate>?,
-                    authType: String?
-                  ) {
-                  }
-
-                  @SuppressLint("TrustAllX509TrustManager")
-                  override fun checkServerTrusted(
-                    chain: Array<out X509Certificate>?,
-                    authType: String?
-                  ) {
-                  }
-
-                  override fun getAcceptedIssuers() = emptyArray<X509Certificate>()
-                }
-                val sslContext = SSLContext.getInstance("TLS").apply {
-                  init(null, arrayOf(trustManager), null)
-                }
-                sslSocketFactory(sslContext.socketFactory, trustManager)
+                val sslContext =
+                    SSLContext.getInstance("TLS").apply {
+                      init(null, arrayOf(TrustAllManager), null)
+                    }
+                sslSocketFactory(sslContext.socketFactory, TrustAllManager)
               }
             }
           }
@@ -110,8 +89,6 @@ class MainApplication : Application(), ImageLoaderFactory {
   }
 
   override fun newImageLoader(): ImageLoader {
-    return ImageLoader.Builder(this)
-        .apply { if (Config.DEBUG) logger(DebugLogger()) }
-        .build()
+    return ImageLoader.Builder(this).apply { if (Config.DEBUG) logger(DebugLogger()) }.build()
   }
 }

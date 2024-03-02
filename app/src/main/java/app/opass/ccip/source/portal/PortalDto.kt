@@ -1,16 +1,15 @@
 package app.opass.ccip.source.portal
 
-import app.opass.ccip.I18nText
 import app.opass.ccip.compose.R
+import app.opass.ccip.misc.I18nText
+import app.opass.ccip.misc.parseISO8601Instant
 import app.opass.ccip.model.DateTimeRange
 import app.opass.ccip.model.Event
 import app.opass.ccip.model.EventConfig
 import app.opass.ccip.model.EventFeature
 import app.opass.ccip.model.ExternalUrlEventFeature
-import app.opass.ccip.model.SimpleInternalUrlEventFeature
-import app.opass.ccip.model.WebViewEventFeature
+import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
-import app.opass.ccip.parseISO8601Instant
 import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
@@ -81,54 +80,40 @@ data class EventDateDto(
 data class EventFeatureDto(
     val feature: String,
     val display_text: Map<String, String>,
-    val visible_roles: List<String>? = null,
-    val wifi: List<EventFeatureWifiDto>? = null,
-    val icon: String? = null,
     val url: String? = null,
+    val icon: String? = null,
+    val wifi: List<EventFeatureWifiDto>? = null,
+    val visible_roles: List<String>? = null,
 ) {
   fun unpack(): EventFeature {
     check()
-    val defaultIcon =
-        when (feature) {
-          "wifi" -> R.drawable.wifi_36
-          "fastpass" -> R.drawable.badge_36
-          "announcement" -> R.drawable.campaign_36
-          "ticket" -> R.drawable.local_activity_36
-          "schedule" -> R.drawable.history_edu_36
-          "telegram" -> R.drawable.telegram_36
-          "im" -> R.drawable.message_36
-          "puzzle" -> R.drawable.extension_36
-          "webview" -> R.drawable.public_36
-          "venue" -> R.drawable.map_36
-          "sponsors" -> R.drawable.handshake_36
-          "staffs" -> R.drawable.people_36
-          else -> null
-        }
+    val defaultIcon = getDefaultIcon()
+    val isRestricted = feature in listOf("fastpass", "ticket", "puzzle")
     return when (feature) {
       "wifi" ->
           WifiEventFeature(
               feature,
               I18nText.parseLocale(display_text),
+              isRestricted,
               wifi!!.associate { it.unpack() },
               defaultIcon,
-              visible_roles,
               icon,
           )
       "fastpass",
       "announcement",
       "ticket",
       "schedule" ->
-          SimpleInternalUrlEventFeature(
+          InternalUrlEventFeature(
               feature,
               I18nText.parseLocale(display_text),
+              isRestricted,
               url!!,
+              defaultIcon,
               when (feature) {
                 "ticket" -> EnterTokenViewDestination
                 "schedule" -> ScheduleViewDestination
                 else -> HomeViewDestination
               },
-              defaultIcon,
-              visible_roles,
               icon,
           )
       "telegram",
@@ -136,9 +121,9 @@ data class EventFeatureDto(
           ExternalUrlEventFeature(
               feature,
               I18nText.parseLocale(display_text),
+              isRestricted,
               url!!,
               defaultIcon,
-              visible_roles,
               icon,
           )
       "puzzle",
@@ -146,17 +131,34 @@ data class EventFeatureDto(
       "venue",
       "sponsors",
       "staffs", ->
-          WebViewEventFeature(
+          ExternalUrlEventFeature(
               feature,
               I18nText.parseLocale(display_text),
+              isRestricted,
               url!!,
               defaultIcon,
-              visible_roles,
               icon,
           )
       else -> throw IllegalArgumentException("unknown feature type")
     }
   }
+
+  private fun getDefaultIcon() =
+      when (feature) {
+        "wifi" -> R.drawable.wifi_36
+        "fastpass" -> R.drawable.badge_36
+        "announcement" -> R.drawable.campaign_36
+        "ticket" -> R.drawable.local_activity_36
+        "schedule" -> R.drawable.history_edu_36
+        "telegram" -> R.drawable.telegram_36
+        "im" -> R.drawable.message_36
+        "puzzle" -> R.drawable.extension_36
+        "webview" -> R.drawable.public_36
+        "venue" -> R.drawable.map_36
+        "sponsors" -> R.drawable.handshake_36
+        "staffs" -> R.drawable.people_36
+        else -> null
+      }
 
   private fun check() {
     when (feature) {

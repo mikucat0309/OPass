@@ -1,4 +1,4 @@
-package app.opass.ccip
+package app.opass.ccip.misc
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal

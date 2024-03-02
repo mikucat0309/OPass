@@ -1,6 +1,6 @@
 package app.opass.ccip.model
 
-import app.opass.ccip.I18nText
+import app.opass.ccip.misc.I18nText
 import java.net.URL
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant

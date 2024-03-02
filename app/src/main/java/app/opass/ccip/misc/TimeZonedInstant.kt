@@ -1,4 +1,4 @@
-package app.opass.ccip
+package app.opass.ccip.misc
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime

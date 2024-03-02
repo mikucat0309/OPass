@@ -1,6 +1,8 @@
 package app.opass.ccip.source.schedule
 
-import app.opass.ccip.I18nText
+import app.opass.ccip.misc.I18nText
+import app.opass.ccip.misc.parseISO8601Instant
+import app.opass.ccip.misc.suppress
 import app.opass.ccip.model.DateTimeRange
 import app.opass.ccip.model.Room
 import app.opass.ccip.model.ScheduleObject
@@ -8,8 +10,6 @@ import app.opass.ccip.model.Session
 import app.opass.ccip.model.SessionType
 import app.opass.ccip.model.Speaker
 import app.opass.ccip.model.Tag
-import app.opass.ccip.parseISO8601Instant
-import app.opass.ccip.suppress
 import java.net.URL
 import java.util.Locale
 import kotlinx.datetime.TimeZone

@@ -1,13 +1,12 @@
 package app.opass.ccip.source.portal
 
-import app.opass.ccip.I18nText
-import app.opass.ccip.TimeZonedInstant
 import app.opass.ccip.compose.R
+import app.opass.ccip.misc.I18nText
+import app.opass.ccip.misc.TimeZonedInstant
 import app.opass.ccip.model.DateTimeRange
 import app.opass.ccip.model.Event
 import app.opass.ccip.model.EventConfig
-import app.opass.ccip.model.SimpleInternalUrlEventFeature
-import app.opass.ccip.model.WebViewEventFeature
+import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.source.mockJsonHttpClient
 import app.opass.ccip.view.destinations.EnterTokenViewDestination
@@ -99,15 +98,6 @@ class RemotePortalClientTest :
                             "url": "https://sitcon.opass.app"
                         },
                         {
-                            "feature": "webview",
-                            "display_text": {
-                                "en": "Lightning Talk Election",
-                                "zh": "閃電秀投稿/投票"
-                            },
-                            "icon": "https://sitcon.org/2022/imgs/opass-icon/lightning-talk.png",
-                            "url": "https://sitcon.org/2022-lightning-talk/?token={token}"
-                        },
-                        {
                             "feature": "wifi",
                             "display_text": {
                                 "en": "WiFi",
@@ -174,62 +164,49 @@ class RemotePortalClientTest :
                         ),
                     ),
                     listOf(
-                        SimpleInternalUrlEventFeature(
+                        InternalUrlEventFeature(
                             "fastpass",
                             I18nText(
                                 Locale.ENGLISH to "Fast Pass",
                                 Locale.CHINESE to "快速通關",
                             ),
+                            true,
                             "https://sitcon.opass.app",
-                            HomeViewDestination,
                             R.drawable.badge_36,
-                            visibleRoles =
-                                listOf(
-                                    "audience",
-                                    "staff",
-                                    "speaker",
-                                ),
+                            HomeViewDestination,
                         ),
-                        SimpleInternalUrlEventFeature(
+                        InternalUrlEventFeature(
                             "schedule",
                             I18nText(
                                 Locale.ENGLISH to "Schedule",
                                 Locale.CHINESE to "議程",
                             ),
+                            false,
                             "https://sitcon.org/2022/json/session.json",
-                            ScheduleViewDestination,
                             R.drawable.history_edu_36,
+                            ScheduleViewDestination,
                         ),
-                        SimpleInternalUrlEventFeature(
+                        InternalUrlEventFeature(
                             "ticket",
                             I18nText(
                                 Locale.ENGLISH to "Ticket",
                                 Locale.CHINESE to "我的票券",
                             ),
+                            true,
                             "https://sitcon.opass.app",
-                            EnterTokenViewDestination,
                             R.drawable.local_activity_36,
+                            EnterTokenViewDestination,
                         ),
-                        SimpleInternalUrlEventFeature(
+                        InternalUrlEventFeature(
                             "announcement",
                             I18nText(
                                 Locale.ENGLISH to "Announcement",
                                 Locale.CHINESE to "大會公告",
                             ),
+                            false,
                             "https://sitcon.opass.app",
-                            HomeViewDestination,
                             R.drawable.campaign_36,
-                        ),
-                        WebViewEventFeature(
-                            "webview",
-                            I18nText(
-                                Locale.ENGLISH to "Lightning Talk Election",
-                                Locale.CHINESE to "閃電秀投稿/投票",
-                            ),
-                            "https://sitcon.org/2022-lightning-talk/?token={token}",
-                            R.drawable.public_36,
-                            iconUrl =
-                                URL("https://sitcon.org/2022/imgs/opass-icon/lightning-talk.png"),
+                            HomeViewDestination,
                         ),
                         WifiEventFeature(
                             "wifi",
@@ -237,6 +214,7 @@ class RemotePortalClientTest :
                                 Locale.ENGLISH to "WiFi",
                                 Locale.CHINESE to "會場 WiFi",
                             ),
+                            false,
                             mapOf(
                                 "SITCON X via Klickklack" to "20220904",
                             ),
