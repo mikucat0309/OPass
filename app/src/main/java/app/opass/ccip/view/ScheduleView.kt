@@ -32,7 +32,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,6 +48,8 @@ import app.opass.ccip.viewmodel.ScheduleViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -59,21 +60,23 @@ import kotlinx.datetime.toLocalDateTime
 @RootNavGraph(start = false)
 @Destination
 @Composable
-fun ScheduleView(vm: ScheduleViewModel = navGraphViewModel(), navigator: DestinationsNavigator) {
+fun ScheduleView(navigator: DestinationsNavigator, vm: ScheduleViewModel = navGraphViewModel()) {
   LaunchedEffect(Unit) { vm.fetchSessions() }
-  val sessions = vm.sessions.cASWL().value
+  val sessions = vm.sessions.cASWL().value.toImmutableList()
   ScheduleScreen(sessions, navigator)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleScreen(sessions: List<Session>, navigator: DestinationsNavigator) {
+private fun ScheduleScreen(sessions: ImmutableList<Session>, navigator: DestinationsNavigator) {
   val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
   val groups =
-      sessions.groupBy {
-        it.dateTime.start.instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-      }
-  val dates = groups.keys.sorted()
+      sessions
+          .groupBy {
+            it.dateTime.start.instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+          }
+          .mapValues { it.value.toImmutableList() }
+  val dates = groups.keys.sorted().toImmutableList()
   if (groups.keys.isNotEmpty()) {
     selectedDate.value = groups.keys.first()
   }
@@ -85,9 +88,9 @@ fun ScheduleScreen(sessions: List<Session>, navigator: DestinationsNavigator) {
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Theme.c.surfaceVariant),
         )
       },
-  ) {
-    Column(Modifier.padding(it)) {
-      DateTab(dates, selectedDate)
+  ) { pv ->
+    Column(Modifier.padding(pv)) {
+      DateTab(dates, selectedDate.value) { selectedDate.value = it }
       Divider()
       if (sessions.isNotEmpty() && selectedDate.value != null) {
         Sessions(groups[selectedDate.value]!!)
@@ -99,7 +102,7 @@ fun ScheduleScreen(sessions: List<Session>, navigator: DestinationsNavigator) {
 }
 
 @Composable
-fun EmptySessions() {
+private fun EmptySessions() {
   Box(
       Modifier.fillMaxSize(),
       contentAlignment = Alignment.Center,
@@ -109,7 +112,11 @@ fun EmptySessions() {
 }
 
 @Composable
-fun DateTab(dates: List<LocalDate>, selectedDate: MutableState<LocalDate?>) {
+private fun DateTab(
+    dates: ImmutableList<LocalDate>,
+    selectedDate: LocalDate?,
+    setSelectedDate: (LocalDate) -> Unit
+) {
   Row(
       Modifier.fillMaxWidth().height(56.dp).background(Theme.c.surfaceVariant),
       horizontalArrangement =
@@ -119,15 +126,13 @@ fun DateTab(dates: List<LocalDate>, selectedDate: MutableState<LocalDate?>) {
           ),
   ) {
     for (date in dates) {
-      DateTabItem(date.dayOfMonth, date.dayOfWeek, date == selectedDate.value) {
-        selectedDate.value = date
-      }
+      DateTabItem(date.dayOfMonth, date.dayOfWeek, date == selectedDate) { setSelectedDate(date) }
     }
   }
 }
 
 @Composable
-fun DateTabItem(
+private fun DateTabItem(
     day: Int,
     dayOfWeek: DayOfWeek,
     isSelected: Boolean = false,
@@ -170,7 +175,7 @@ fun DateTabItem(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Sessions(sessions: List<Session>) {
+private fun Sessions(sessions: ImmutableList<Session>) {
   val m =
       sessions
           .sortedBy { it.dateTime.start.instant.toLocalDateTime(TimeZone.currentSystemDefault()) }
@@ -190,7 +195,7 @@ fun Sessions(sessions: List<Session>) {
 }
 
 @Composable
-fun StartTimeTitle(start: LocalDateTime) {
+private fun StartTimeTitle(start: LocalDateTime) {
   Box(
       Modifier.fillMaxWidth()
           .background(Theme.c.surfaceVariant)
@@ -207,7 +212,7 @@ fun StartTimeTitle(start: LocalDateTime) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SessionItem(session: Session) {
+private fun SessionItem(session: Session) {
   Row(
       Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
       verticalAlignment = Alignment.CenterVertically,

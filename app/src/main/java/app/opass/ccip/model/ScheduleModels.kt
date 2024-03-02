@@ -33,7 +33,7 @@ data class Session(
     val url: URL? = null,
     val qa: URL? = null,
     val slide: URL? = null,
-    val co_write: URL? = null,
+    val coWrite: URL? = null,
     val live: URL? = null,
     val record: URL? = null,
     val language: String? = null,

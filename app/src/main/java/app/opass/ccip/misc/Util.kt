@@ -35,6 +35,7 @@ fun LocaleListCompat.toList(): List<Locale> {
   return list.toList()
 }
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException")
 fun <T> suppress(scope: () -> T): T? =
     try {
       scope()
