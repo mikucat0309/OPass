@@ -10,9 +10,9 @@ import app.opass.ccip.model.EventFeature
 import app.opass.ccip.model.ExternalUrlEventFeature
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
-import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
+import app.opass.ccip.view.destinations.TicketViewDestination
 import java.net.URL
 import kotlinx.serialization.Serializable
 
@@ -110,7 +110,7 @@ data class EventFeatureDto(
               url!!,
               defaultIcon,
               when (feature) {
-                "ticket" -> EnterTokenViewDestination
+                "ticket" -> TicketViewDestination
                 "schedule" -> ScheduleViewDestination
                 else -> HomeViewDestination
               },

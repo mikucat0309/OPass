@@ -9,9 +9,9 @@ import app.opass.ccip.model.EventConfig
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.source.mockJsonHttpClient
-import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
+import app.opass.ccip.view.destinations.TicketViewDestination
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.net.URL
@@ -195,7 +195,7 @@ class RemotePortalClientTest :
                             true,
                             "https://sitcon.opass.app",
                             R.drawable.local_activity_36,
-                            EnterTokenViewDestination,
+                            TicketViewDestination,
                         ),
                         InternalUrlEventFeature(
                             "announcement",

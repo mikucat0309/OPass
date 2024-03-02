@@ -11,6 +11,7 @@ import app.opass.ccip.viewmodel.EnterTokenViewModel
 import app.opass.ccip.viewmodel.HomeViewModel
 import app.opass.ccip.viewmodel.ScheduleViewModel
 import app.opass.ccip.viewmodel.SwitchEventViewModel
+import app.opass.ccip.viewmodel.TicketViewModel
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.util.DebugLogger
@@ -78,6 +79,7 @@ class MainApplication : Application(), ImageLoaderFactory {
       viewModelOf(::EnterTokenViewModel)
       viewModelOf(::SwitchEventViewModel)
       viewModelOf(::ScheduleViewModel)
+      viewModelOf(::TicketViewModel)
     }
 
     startKoin {

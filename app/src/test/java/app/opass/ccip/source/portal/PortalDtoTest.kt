@@ -8,9 +8,9 @@ import app.opass.ccip.model.Event
 import app.opass.ccip.model.ExternalUrlEventFeature
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
-import app.opass.ccip.view.destinations.EnterTokenViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
+import app.opass.ccip.view.destinations.TicketViewDestination
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.net.URL
@@ -153,7 +153,7 @@ class PortalDtoTest :
                     true,
                     urlDto,
                     R.drawable.local_activity_36,
-                    EnterTokenViewDestination,
+                    TicketViewDestination,
                 )
             dto.unpack().shouldBe(expected)
           }
