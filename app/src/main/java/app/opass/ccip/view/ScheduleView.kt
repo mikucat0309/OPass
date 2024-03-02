@@ -22,9 +22,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -91,7 +91,7 @@ private fun ScheduleScreen(sessions: ImmutableList<Session>, navigator: Destinat
   ) { pv ->
     Column(Modifier.padding(pv)) {
       DateTab(dates, selectedDate.value) { selectedDate.value = it }
-      Divider()
+      HorizontalDivider()
       if (sessions.isNotEmpty() && selectedDate.value != null) {
         Sessions(groups[selectedDate.value]!!)
       } else {
@@ -187,7 +187,7 @@ private fun Sessions(sessions: ImmutableList<Session>) {
       itemsIndexed(part) { i, session ->
         SessionItem(session)
         if (i < part.lastIndex) {
-          Divider(Modifier.padding(horizontal = 24.dp))
+          HorizontalDivider(Modifier.padding(horizontal = 24.dp))
         }
       }
     }
@@ -239,7 +239,7 @@ private fun SessionItem(session: Session) {
         }
       }
     }
-    Icon(Icons.Default.KeyboardArrowRight, "", Modifier.size(24.dp))
+    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "", Modifier.size(24.dp))
   }
 }
 

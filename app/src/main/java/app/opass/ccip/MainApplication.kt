@@ -20,7 +20,9 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import javax.net.ssl.SSLContext
@@ -58,7 +60,10 @@ class MainApplication : Application(), ImageLoaderFactory {
             }
           }
           install(ContentNegotiation) { json(get()) }
-          install(Logging) { level = if (Config.DEBUG) LogLevel.ALL else LogLevel.NONE }
+          install(Logging) {
+            logger = Logger.ANDROID
+            level = if (Config.DEBUG) LogLevel.ALL else LogLevel.NONE
+          }
           install(HttpCache) { publicStorage(FileStorage(androidContext().cacheDir)) }
         }
       }

@@ -1,8 +1,9 @@
-package app.opass.ccip.source.ccip
+package app.opass.ccip.test.source.ccip
 
 import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Announcement
-import app.opass.ccip.source.mockJsonHttpClient
+import app.opass.ccip.source.ccip.RemoteCcipClient
+import app.opass.ccip.test.source.mockJsonHttpClient
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.net.URL

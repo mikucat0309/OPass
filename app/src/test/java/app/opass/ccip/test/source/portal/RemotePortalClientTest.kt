@@ -1,4 +1,4 @@
-package app.opass.ccip.source.portal
+package app.opass.ccip.test.source.portal
 
 import app.opass.ccip.compose.R
 import app.opass.ccip.misc.I18nText
@@ -8,7 +8,8 @@ import app.opass.ccip.model.Event
 import app.opass.ccip.model.EventConfig
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
-import app.opass.ccip.source.mockJsonHttpClient
+import app.opass.ccip.source.portal.RemotePortalClient
+import app.opass.ccip.test.source.mockJsonHttpClient
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
 import app.opass.ccip.view.destinations.TicketViewDestination

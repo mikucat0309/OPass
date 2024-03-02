@@ -1,23 +1,24 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-  id("com.android.application") version "8.2.2"
-  id("org.jetbrains.kotlin.android") version "1.9.20"
-  id("org.jetbrains.kotlin.plugin.serialization") version "1.9.20"
-  id("com.google.devtools.ksp") version "1.9.20-1.0.14"
-  id("com.ncorti.ktfmt.gradle") version "0.15.1"
-  id("io.gitlab.arturbosch.detekt") version "1.23.4"
-//  id("com.google.protobuf") version "0.9.4"
+  id("com.android.application") version "8.3.0"
+  id("org.jetbrains.kotlin.android") version "1.9.22"
+  id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
+  id("com.google.devtools.ksp") version "1.9.22-1.0.18"
+  id("com.ncorti.ktfmt.gradle") version "0.17.0"
+  id("io.gitlab.arturbosch.detekt") version "1.23.5"
+  id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 android {
   namespace = "app.opass.ccip.compose"
-  testNamespace = "app.opass.ccip.compose"
+  testNamespace = "app.opass.ccip.compose.test"
   compileSdk = 34
 
   defaultConfig {
     applicationId = "app.opass.ccip.compose"
-    testApplicationId = "app.opass.ccip.compose"
+    testApplicationId = "app.opass.ccip.compose.test"
     minSdk = 33
     targetSdk = 34
     versionCode = 1
@@ -52,7 +53,7 @@ android {
     compose = true
   }
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.5"
+    kotlinCompilerExtensionVersion = "1.5.10"
   }
   packaging {
     resources {
@@ -80,49 +81,43 @@ detekt {
   config.setFrom("$projectDir/config/detekt.yml")
 }
 
-//protobuf {
-//  generateProtoTasks {
-//    all().forEach {
-//      it.builtins {
-//        create("java") {
-//          option("lite")
-//        }
-//        create("kotlin") {
-//          option("lite")
-//        }
-//      }
-//    }
-//  }
-//}
+tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
+  // 1.2.3
+  // 1.2.3-4
+  // 1.2.3-4.5
+  // 1.2.3-4.5.6
+  val regex = Regex("""^\d+\.\d+\.\d+(-\d+(\.\d+){0,2})?$""")
+  rejectVersionIf { !regex.matches(candidate.version) }
+}
 
 dependencies {
-  val composeVersion = "1.5.4"
-  val ktorVersion = "2.3.6"
+  val composeVersion = "1.6.2"
+  val ktorVersion = "2.3.8"
+  val lifecycleVersion = "2.7.0"
 
   implementation("androidx.core", "core-ktx", "1.12.0")
-  implementation("androidx.lifecycle", "lifecycle-runtime-ktx", "2.6.2")
 
-  implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.20"))
+  implementation(platform("androidx.compose:compose-bom:2024.02.01"))
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.22"))
+  implementation("androidx.lifecycle", "lifecycle-runtime-ktx", lifecycleVersion)
 
   // Jetpack Compose
   implementation("androidx.compose.ui", "ui", composeVersion)
   implementation("androidx.compose.ui", "ui-graphics", composeVersion)
   implementation("androidx.compose.ui", "ui-tooling-preview", composeVersion)
-//  implementation("androidx.compose.material", "material-icons-extended", composeVersion)
-  implementation("androidx.compose.material3", "material3", "1.1.2")
-  implementation("androidx.activity", "activity-compose", "1.8.1")
-  implementation("androidx.lifecycle", "lifecycle-viewmodel-compose", "2.6.2")
-  implementation("androidx.lifecycle", "lifecycle-runtime-compose", "2.6.2")
+  implementation("androidx.compose.material3", "material3", "1.2.0")
+  implementation("androidx.activity", "activity-compose", "1.8.2")
+  implementation("androidx.lifecycle", "lifecycle-viewmodel-compose", lifecycleVersion)
+  implementation("androidx.lifecycle", "lifecycle-runtime-compose", lifecycleVersion)
 
   // Navigation
-  implementation("io.github.raamcosta.compose-destinations", "core", "1.9.55")
-  ksp("io.github.raamcosta.compose-destinations", "ksp", "1.9.55")
+  implementation("io.github.raamcosta.compose-destinations", "core", "1.10.1")
+  ksp("io.github.raamcosta.compose-destinations", "ksp", "1.10.1")
 
-  implementation("io.coil-kt", "coil-base", "2.5.0")
-  implementation("io.coil-kt", "coil-compose", "2.5.0")
+  implementation("io.coil-kt", "coil-base", "2.6.0")
+  implementation("io.coil-kt", "coil-compose", "2.6.0")
 
-  implementation("io.github.g0dkar", "qrcode-kotlin-android", "4.0.7")
+  implementation("io.github.g0dkar", "qrcode-kotlin-android", "4.1.1")
 
 
   implementation("org.jetbrains.kotlinx", "kotlinx-datetime", "0.5.0")
@@ -134,25 +129,18 @@ dependencies {
   implementation("io.ktor", "ktor-client-content-negotiation", ktorVersion)
   implementation("io.ktor", "ktor-serialization-kotlinx-json", ktorVersion)
   implementation("io.ktor", "ktor-client-logging", ktorVersion)
+  implementation("org.slf4j", "slf4j-android", "1.7.36")
 
-  // Logging
-//  implementation("org.slf4j", "slf4j-android", "1.7.36")
-  implementation("uk.uuid.slf4j", "slf4j-android", "2.0.7-0")
 
   // DI
-  implementation("io.insert-koin", "koin-android", "3.5.0")
-  implementation("io.insert-koin", "koin-androidx-compose", "3.5.0")
-
-
-  // Local Cache & Settings
-//  implementation("androidx.datastore", "datastore", "1.0.0")
-//  implementation("com.google.protobuf", "protobuf-kotlin", "3.25.1")
+  implementation("io.insert-koin", "koin-android", "3.5.3")
+  implementation("io.insert-koin", "koin-androidx-compose", "3.5.3")
 
   // Linting
-  detektPlugins("io.nlopez.compose.rules:detekt:0.3.8")
+  detektPlugins("io.nlopez.compose.rules:detekt:0.3.11")
 
   // Unit Test
-  testImplementation("org.jetbrains.kotlin", "kotlin-reflect", "1.9.20")
+  testImplementation("org.jetbrains.kotlin", "kotlin-reflect", "1.9.22")
   testImplementation("io.kotest", "kotest-runner-junit5", "5.8.0")
   testImplementation("io.ktor", "ktor-client-mock", ktorVersion)
 

@@ -1,9 +1,12 @@
-package app.opass.ccip.source.ccip
+package app.opass.ccip.test.source.ccip
 
 import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Announcement
 import app.opass.ccip.model.Attendee
 import app.opass.ccip.model.Scenario
+import app.opass.ccip.source.ccip.AnnouncementDto
+import app.opass.ccip.source.ccip.AttendeeDto
+import app.opass.ccip.source.ccip.ScenarioDto
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.net.URL
