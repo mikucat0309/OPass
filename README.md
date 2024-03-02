@@ -40,8 +40,16 @@ Status: **Work In Progress**
 ./gradlew :app:detekt
 ```
 
-### Build Debug APK
+### Local debug
+
+#### Requirements
+
+- ADB
+- Caddy
+
+#### Start a mock server
 
 ```sh
-./gradlew :app:assembleDebug
+cd local-server
+./run.sh
 ```

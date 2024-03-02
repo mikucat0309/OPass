@@ -1,0 +1,10 @@
+[
+  {
+    "event_id": "local",
+    "display_name": {
+      "en": "Local Testing",
+      "zh": "本地測試"
+    },
+    "logo_url": "http://localhost:8080/logo.png"
+  }
+]

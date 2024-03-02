@@ -1,0 +1,22 @@
+{
+	http_port 8080
+	https_port 8443
+	skip_install_trust
+	auto_https disable_redirects
+}
+
+http://localhost:8080, https://localhost:8443 {
+	redir /events /events/
+	redir /events/local /events/local/
+
+	rewrite /events/ /events.json
+	rewrite /events/local/ /local.json
+
+	rewrite /landing /landing.json
+
+	rewrite /status /status.json
+
+	route {
+		file_server browse
+	}
+}
