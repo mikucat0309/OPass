@@ -94,20 +94,8 @@ private fun ScheduleScreen(sessions: ImmutableList<Session>, navigator: Destinat
       HorizontalDivider()
       if (sessions.isNotEmpty() && selectedDate.value != null) {
         Sessions(groups[selectedDate.value]!!)
-      } else {
-        EmptySessions()
       }
     }
-  }
-}
-
-@Composable
-private fun EmptySessions() {
-  Box(
-      Modifier.fillMaxSize(),
-      contentAlignment = Alignment.Center,
-  ) {
-    Text("No Sessions", style = Theme.t.displayMedium)
   }
 }
 
