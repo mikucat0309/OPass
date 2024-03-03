@@ -28,6 +28,19 @@ android {
       useSupportLibrary = true
     }
   }
+  signingConfigs {
+    create("release") {
+      storeFile = file(System.getenv("KEYSTORE_FILE") ?: "KEYSTORE_FILE")
+      storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "KEYSTORE_PASSWORD"
+      keyAlias = System.getenv("KEY_ALIAS") ?: "KEY_ALIAS"
+      keyPassword = System.getenv("KEY_PASSWORD") ?: "KEY_PASSWORD"
+
+      enableV1Signing = false
+      enableV2Signing = false
+      enableV3Signing = true
+      enableV4Signing = true
+    }
+  }
   buildTypes {
     debug {
       applicationIdSuffix = ".debug"
@@ -39,7 +52,7 @@ android {
           getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro",
       )
-      signingConfig = signingConfigs.getByName("debug")
+      signingConfig = signingConfigs.getByName("release")
     }
   }
   compileOptions {
