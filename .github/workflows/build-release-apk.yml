@@ -1,16 +1,17 @@
-name: Build Release APK
+name: Build release APK
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -19,15 +20,18 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.4
 
       - name: Build APK
         run: gradle :app:assembleRelease
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: apk-${{ github.ref_name }}
-          path: app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
+      - name: Upload to release assets
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            '/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets?name=opass-${{ github.event.release.tag_name }}.apk' \
+            -f '@app/build/outputs/apk/release/app-release.apk'
