@@ -4,7 +4,6 @@ import app.opass.ccip.misc.I18nText
 import app.opass.ccip.model.Announcement
 import app.opass.ccip.model.Attendee
 import app.opass.ccip.model.Scenario
-import app.opass.ccip.source.Unpackable
 import java.net.URL
 import java.util.Locale
 import kotlinx.datetime.DateTimePeriod
@@ -19,8 +18,8 @@ data class AnnouncementDto(
     val msg_en: String,
     val msg_zh: String,
     val uri: String,
-) : Unpackable<Announcement> {
-  override fun unpack() =
+) {
+  fun unpack() =
       Announcement(
           Instant.fromEpochSeconds(datetime),
           I18nText(
@@ -67,8 +66,8 @@ data class ScenarioDto(
     val used: Long? = null,
     val disabled: String? = null,
     val attr: JsonElement = buildJsonObject {},
-) : Unpackable<Scenario> {
-  override fun unpack() =
+) {
+  fun unpack() =
       Scenario(
           id,
           order,
