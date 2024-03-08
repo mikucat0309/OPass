@@ -24,7 +24,7 @@ data class ScheduleDto(
     val tags: List<ScheduleObjectDto>,
 ) {
   fun unpack(timeZone: TimeZone): List<Session> {
-    val speakers2 = speakers.map { it.unpack() }
+    val speakers2 = speakers.filter { it.id != null }.map { it.unpack() }
     val sessionTypes2 = session_types.map { it.unpack() }
     val rooms2 = rooms.map { it.unpack() }
     val tags2 = tags.map { it.unpack() }
@@ -104,14 +104,14 @@ data class TitleDescDto(
 
 @Serializable
 data class SpeakerDto(
-    val id: String,
+    val id: String?,
     val avatar: String,
     val zh: NameBioDto,
     val en: NameBioDto,
 ) {
   fun unpack() =
       Speaker(
-          id,
+          id!!,
           URL(avatar),
           I18nText(
               Locale.ENGLISH to en.name,
