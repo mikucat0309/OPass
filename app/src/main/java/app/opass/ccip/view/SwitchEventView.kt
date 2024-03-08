@@ -61,8 +61,8 @@ private fun SwitchEventScreen(
             navigationIcon = { BackIcon(navigator) },
             title = {
               Column {
-                Text("活動", style = Theme.t.headlineSmall)
-                Text("", style = Theme.t.bodySmall)
+                Text("OPass", style = Theme.t.titleLarge)
+                Text("select a event", style = Theme.t.bodySmall)
               }
             },
         )
