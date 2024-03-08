@@ -11,10 +11,9 @@ http://localhost:8080, https://localhost:8443 {
 
 	rewrite /events/ /events.json
 	rewrite /events/local/ /local.json
-
 	rewrite /landing /landing.json
-
 	rewrite /status /status.json
+	rewrite /announcement /announcement.json
 
 	route {
 		file_server browse

@@ -1,6 +1,5 @@
 package app.opass.ccip.view
 
-import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -166,16 +165,16 @@ private fun onClick(
     navigator: DestinationsNavigator,
     isGuest: Boolean
 ): () -> Unit {
-  val activity = LocalContext.current as Activity
+  val context = LocalContext.current
   return when (feature) {
     is InternalUrlEventFeature -> {
       { feature.onClick(navigator, isGuest) }
     }
     is ExternalUrlEventFeature -> {
-      { feature.onClick(navigator, isGuest, activity) }
+      { feature.onClick(navigator, isGuest, context) }
     }
     is WifiEventFeature -> {
-      { Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show() }
+      { Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT).show() }
     }
   }
 }

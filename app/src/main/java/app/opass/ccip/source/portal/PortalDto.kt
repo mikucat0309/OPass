@@ -10,6 +10,7 @@ import app.opass.ccip.model.EventFeature
 import app.opass.ccip.model.ExternalUrlEventFeature
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
+import app.opass.ccip.view.destinations.AnnouncementViewDestination
 import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.view.destinations.ScheduleViewDestination
 import app.opass.ccip.view.destinations.TicketViewDestination
@@ -110,6 +111,7 @@ data class EventFeatureDto(
               url!!,
               defaultIcon,
               when (feature) {
+                "announcement" -> AnnouncementViewDestination
                 "ticket" -> TicketViewDestination
                 "schedule" -> ScheduleViewDestination
                 else -> HomeViewDestination

@@ -1,6 +1,6 @@
 package app.opass.ccip.model
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.DrawableRes
@@ -63,7 +63,7 @@ data class ExternalUrlEventFeature(
     override val iconUrl: String? = null,
 ) : EventFeature, UrlEventFeature, KoinComponent {
 
-  fun onClick(navigator: DestinationsNavigator, isGuest: Boolean, activity: Activity) {
+  fun onClick(navigator: DestinationsNavigator, isGuest: Boolean, activity: Context) {
     if (isRestricted && isGuest) {
       navigator.navigate(EnterTokenViewDestination)
     } else {

@@ -7,6 +7,7 @@ import app.opass.ccip.model.ScheduleModel
 import app.opass.ccip.source.ccip.RemoteCcipClient
 import app.opass.ccip.source.portal.RemotePortalClient
 import app.opass.ccip.source.schedule.RemoteScheduleClient
+import app.opass.ccip.viewmodel.AnnouncementViewModel
 import app.opass.ccip.viewmodel.EnterTokenViewModel
 import app.opass.ccip.viewmodel.HomeViewModel
 import app.opass.ccip.viewmodel.ScheduleViewModel
@@ -85,6 +86,7 @@ class MainApplication : Application(), ImageLoaderFactory {
       viewModelOf(::SwitchEventViewModel)
       viewModelOf(::ScheduleViewModel)
       viewModelOf(::TicketViewModel)
+      viewModelOf(::AnnouncementViewModel)
     }
 
     startKoin {

@@ -15,14 +15,15 @@ class CcipModel(
       remote.baseUrl = value
     }
 
-  val announcements = MutableStateFlow<List<Announcement>>(emptyList())
+  private val _announcements = MutableStateFlow<List<Announcement>>(emptyList())
+  val announcements: StateFlow<List<Announcement>> = _announcements
   private val _attendee = MutableStateFlow<Attendee?>(null)
   val attendee: StateFlow<Attendee?> = _attendee
 
   val errorMessage = MutableStateFlow("")
 
   suspend fun fetchAnnouncements(token: String? = null) {
-    remote.getAnnouncements(token).onSuccess { v -> announcements.update { v } }
+    remote.getAnnouncements(token).onSuccess { v -> _announcements.update { v } }
   }
 
   suspend fun fetchAttendee(token: String) {

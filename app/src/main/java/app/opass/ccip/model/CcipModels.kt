@@ -33,5 +33,5 @@ data class Scenario(
 data class Announcement(
     val datetime: Instant,
     val message: I18nText,
-    val url: URL,
+    val url: URL? = null,
 )
