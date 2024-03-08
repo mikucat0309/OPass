@@ -50,6 +50,10 @@ Status: **Work In Progress**
 #### Start a mock server
 
 ```sh
+adb reverse tcp:8080 tcp:8080
+```
+
+```sh
 cd local-server
-./run.sh
+caddy run --watch
 ```
