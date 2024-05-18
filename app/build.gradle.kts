@@ -127,12 +127,14 @@ dependencies {
   implementation("io.github.raamcosta.compose-destinations", "core", "1.10.1")
   ksp("io.github.raamcosta.compose-destinations", "ksp", "1.10.1")
 
+  // Async Image Loader
   implementation("io.coil-kt", "coil-base", "2.6.0")
   implementation("io.coil-kt", "coil-compose", "2.6.0")
 
+  // QRCode Generator
   implementation("io.github.g0dkar", "qrcode-kotlin-android", "4.1.1")
 
-
+  // Kotlinx
   implementation("org.jetbrains.kotlinx", "kotlinx-datetime", "0.5.0")
   implementation("org.jetbrains.kotlinx", "kotlinx-collections-immutable-jvm", "0.3.7")
 
@@ -143,7 +145,6 @@ dependencies {
   implementation("io.ktor", "ktor-serialization-kotlinx-json", ktorVersion)
   implementation("io.ktor", "ktor-client-logging", ktorVersion)
   implementation("org.slf4j", "slf4j-android", "1.7.36")
-
 
   // DI
   implementation("io.insert-koin", "koin-android", "3.5.3")
