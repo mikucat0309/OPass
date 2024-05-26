@@ -1,34 +1,23 @@
 package app.opass.ccip.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.opass.ccip.model.CcipModel
-import app.opass.ccip.model.InternalUrlEventFeature
-import app.opass.ccip.model.PortalModel
-import app.opass.ccip.model.ScheduleModel
-import java.net.URL
+import app.opass.ccip.model.Session
+import app.opass.ccip.source.portal.PortalClient
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ScheduleViewModel : ViewModel(), KoinComponent {
-  private val ccipModel: CcipModel by inject()
-  private val portalModel: PortalModel by inject()
-  private val scheduleModel: ScheduleModel by inject()
+  private val portalClient: PortalClient by inject()
   private val dispatcher: CoroutineDispatcher by inject()
-
-  val sessions = scheduleModel.sessions
+  var sessions by mutableStateOf(emptyList<Session>())
 
   fun fetchSessions() {
-    val eventConfig = portalModel.eventConfig.value ?: return
-    val feature =
-        eventConfig.features.firstOrNull { it.type == "schedule" } as? InternalUrlEventFeature
-    val timeZone = eventConfig.eventDateTimeRange.start.timeZone
-    if (feature != null) {
-      viewModelScope.launch(dispatcher) {
-        scheduleModel.fetchSessions(URL(ccipModel.replaceTemplate(feature.url)), timeZone)
-      }
-    }
+    viewModelScope.launch(dispatcher) { portalClient.updateSessions().onSuccess { sessions = it } }
   }
 }

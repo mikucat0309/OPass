@@ -1,6 +1,5 @@
 package app.opass.ccip.view
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,21 +26,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.opass.ccip.compose.R
-import app.opass.ccip.misc.QRCodeFetcher
 import app.opass.ccip.misc.QString
 import app.opass.ccip.ui.theme.Theme
 import app.opass.ccip.viewmodel.TicketViewModel
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 @Destination
 @Composable
 fun TicketView(
     navigator: DestinationsNavigator,
-    vm: TicketViewModel = navGraphViewModel(),
+    vm: TicketViewModel = koinViewModel(),
 ) {
   val attendee = vm.attendee.cASWL().value ?: return
   TicketScreen(attendee.token, navigator)
@@ -81,12 +79,9 @@ private fun TicketScreen(token: String, navigator: DestinationsNavigator) {
 @Composable
 private fun QRCode(token: String) {
   AsyncImage(
-      model =
-          ImageRequest.Builder(koinInject<Context>())
-              .data(QString(token))
-              .fetcherFactory(QRCodeFetcher.Factory)
-              .build(),
+      model = QString(token),
       contentDescription = "token QRCode",
+      imageLoader = koinInject(),
       Modifier.fillMaxWidth().aspectRatio(1.0f).padding(64.dp),
   )
 }

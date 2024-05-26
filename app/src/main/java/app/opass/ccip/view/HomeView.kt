@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -57,16 +58,18 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.util.Locale
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun HomeView(
     navigator: DestinationsNavigator,
-    vm: HomeViewModel = navGraphViewModel(),
+    vm: HomeViewModel = koinViewModel(),
 ) {
-  val eventConfig = vm.eventConfig.cASWL().value
-  val attendee = vm.attendee.cASWL().value
+  val eventConfig by vm.eventConfig.cASWL()
+  val attendee by vm.attendee.cASWL()
   HomeScreen(eventConfig, attendee, navigator)
 }
 
@@ -123,10 +126,11 @@ private fun EventHeader(
       horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     AsyncImage(
-        model = eventConfig?.logoUrl.toString(),
-        contentDescription = eventConfig?.name?.current ?: "",
+        eventConfig?.logoUrl.toString(),
+        eventConfig?.name?.current ?: "",
+        koinInject(),
+        Modifier.padding(horizontal = 32.dp).aspectRatio(2.0f).heightIn(max = 180.dp),
         contentScale = ContentScale.Fit,
-        modifier = Modifier.padding(horizontal = 32.dp).aspectRatio(2.0f).heightIn(max = 180.dp),
     )
     if (eventConfig?.features?.any { it.type == "ticket" } == true) {
       AssistChip(
@@ -198,10 +202,11 @@ private fun FeatureButton(
     ) {
       if (feature.iconUrl != null) {
         AsyncImage(
-            model = feature.iconUrl,
-            contentDescription = feature.name.current,
+            feature.iconUrl,
+            feature.name.current,
+            koinInject(),
             Modifier.size(36.dp),
-            colorFilter = ColorFilter.tint(LocalContentColor.current)
+            colorFilter = ColorFilter.tint(LocalContentColor.current),
         )
       } else if (feature.icon != null) {
         Icon(

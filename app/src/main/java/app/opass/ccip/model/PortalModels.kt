@@ -35,6 +35,11 @@ sealed interface EventFeature {
   val iconUrl: String?
 }
 
+object EventFeatureTypes {
+  const val ANNOUNCEMENT = "announcement"
+  const val FAST_PASS = "fastpass"
+}
+
 interface UrlEventFeature {
   val url: String
 }

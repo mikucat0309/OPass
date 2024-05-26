@@ -150,6 +150,10 @@ dependencies {
   implementation("io.insert-koin", "koin-android", "3.5.3")
   implementation("io.insert-koin", "koin-androidx-compose", "3.5.3")
 
+  // Config
+  implementation("androidx.datastore:datastore:1.1.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
   // Linting
   detektPlugins("io.nlopez.compose.rules:detekt:0.3.11")
 

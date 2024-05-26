@@ -55,13 +55,14 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.androidx.compose.koinViewModel
 
 @RootNavGraph(start = false)
 @Destination
 @Composable
-fun ScheduleView(navigator: DestinationsNavigator, vm: ScheduleViewModel = navGraphViewModel()) {
+fun ScheduleView(navigator: DestinationsNavigator, vm: ScheduleViewModel = koinViewModel()) {
   LaunchedEffect(Unit) { vm.fetchSessions() }
-  val sessions = vm.sessions.cASWL().value.toImmutableList()
+  val sessions = vm.sessions.toImmutableList()
   ScheduleScreen(sessions, navigator)
 }
 
@@ -100,20 +101,17 @@ private fun ScheduleScreen(sessions: ImmutableList<Session>, navigator: Destinat
 
 @Composable
 private fun DateTab(
-  dates: ImmutableList<LocalDate>,
-  selectedDate: LocalDate?,
-  setSelectedDate: (LocalDate) -> Unit
+    dates: ImmutableList<LocalDate>,
+    selectedDate: LocalDate?,
+    setSelectedDate: (LocalDate) -> Unit
 ) {
   Row(
-      Modifier
-          .fillMaxWidth()
-          .height(56.dp)
-          .background(Theme.c.surfaceVariant),
+      Modifier.fillMaxWidth().height(56.dp).background(Theme.c.surfaceVariant),
       horizontalArrangement =
-      Arrangement.spacedBy(
-          32.dp,
-          alignment = Alignment.CenterHorizontally,
-      ),
+          Arrangement.spacedBy(
+              32.dp,
+              alignment = Alignment.CenterHorizontally,
+          ),
   ) {
     for (date in dates) {
       DateTabItem(date.dayOfMonth, date.dayOfWeek, date == selectedDate) { setSelectedDate(date) }
@@ -123,10 +121,10 @@ private fun DateTab(
 
 @Composable
 private fun DateTabItem(
-  day: Int,
-  dayOfWeek: DayOfWeek,
-  isSelected: Boolean = false,
-  onClick: () -> Unit = {}
+    day: Int,
+    dayOfWeek: DayOfWeek,
+    isSelected: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
   val textStyle =
       if (isSelected) {
@@ -143,18 +141,13 @@ private fun DateTabItem(
         )
       }
   Column(
-      Modifier
-          .fillMaxHeight()
-          .width(32.dp)
-          .clickable { onClick() },
+      Modifier.fillMaxHeight().width(32.dp).clickable { onClick() },
       horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Text(stringResource(WEEKDAY_LABELS[dayOfWeek]!!), style = textStyle)
     Text(day.toString(), style = textStyle.copy(fontSize = 22.sp, fontWeight = FontWeight(700)))
     Spacer(Modifier.weight(1.0f))
-    val m = Modifier
-        .fillMaxWidth()
-        .height(3.dp)
+    val m = Modifier.fillMaxWidth().height(3.dp)
     Box(
         if (isSelected) {
           m.background(
@@ -192,8 +185,7 @@ private fun Sessions(sessions: ImmutableList<Session>) {
 @Composable
 private fun StartTimeTitle(start: LocalDateTime) {
   Box(
-      Modifier
-          .fillMaxWidth()
+      Modifier.fillMaxWidth()
           .background(Theme.c.surfaceVariant)
           .padding(horizontal = 24.dp, vertical = 16.dp),
       contentAlignment = Alignment.CenterStart,
@@ -210,9 +202,7 @@ private fun StartTimeTitle(start: LocalDateTime) {
 @Composable
 private fun SessionItem(session: Session) {
   Row(
-      Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 24.dp, vertical = 16.dp),
+      Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(
@@ -256,8 +246,7 @@ private fun TimeRange(range: DateTimeRange) {
 @Composable
 private fun LocationTag(value: String) {
   Box(
-      Modifier
-          .background(Theme.c.primaryContainer, RoundedCornerShape(4.dp))
+      Modifier.background(Theme.c.primaryContainer, RoundedCornerShape(4.dp))
           .padding(horizontal = 6.dp),
       contentAlignment = Alignment.Center,
   ) {
@@ -268,8 +257,7 @@ private fun LocationTag(value: String) {
 @Composable
 private fun SessionTypeTag(value: String) {
   Box(
-      Modifier
-          .background(Theme.c.surfaceVariant, RoundedCornerShape(4.dp))
+      Modifier.background(Theme.c.surfaceVariant, RoundedCornerShape(4.dp))
           .padding(horizontal = 6.dp),
       contentAlignment = Alignment.Center,
   ) {
@@ -280,8 +268,7 @@ private fun SessionTypeTag(value: String) {
 @Composable
 private fun NormalTag(value: String) {
   Box(
-      Modifier
-          .border(
+      Modifier.border(
               width = 1.dp,
               color = Theme.c.surfaceVariant,
               shape = RoundedCornerShape(size = 4.dp),

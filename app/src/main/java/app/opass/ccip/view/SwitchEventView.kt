@@ -32,18 +32,18 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import org.koin.androidx.compose.koinViewModel
 
 @Destination
 @Composable
 fun SwitchEventView(
     navigator: DestinationsNavigator,
-    vm: SwitchEventViewModel = navGraphViewModel(),
+    vm: SwitchEventViewModel = koinViewModel(),
 ) {
-  if (vm.eventState.value == EventState.DONE) {
-    vm.reset()
+  if (vm.eventState == EventState.DONE) {
     navigator.popBackStack(HomeViewDestination.route, false)
   }
-  val events = vm.events.cASWL().value.toImmutableList()
+  val events = vm.events.toImmutableList()
   LaunchedEffect(Unit) { vm.fetchEvents() }
   SwitchEventScreen(events, navigator) { vm.fetchEventConfig(it.id) }
 }

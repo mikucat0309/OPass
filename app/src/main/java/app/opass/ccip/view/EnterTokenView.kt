@@ -15,23 +15,22 @@ import app.opass.ccip.viewmodel.EnterTokenViewModel
 import app.opass.ccip.viewmodel.EventState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Destination
 @Composable
 fun EnterTokenView(
     navigator: DestinationsNavigator,
-    vm: EnterTokenViewModel = navGraphViewModel(),
+    vm: EnterTokenViewModel = koinViewModel(),
 ) {
-  val errorMessage = vm.errorMessage.cASWL()
-  if (vm.eventState.value == EventState.DONE && errorMessage.value.isBlank()) {
-    vm.reset()
+  if (vm.eventState.value == EventState.DONE) {
     navigator.popBackStack(HomeViewDestination.route, false)
   }
   var token by remember { mutableStateOf("") }
   AlertDialog(
       onDismissRequest = {},
       confirmButton = {
-        TextButton(onClick = { if (token.isNotBlank()) vm.fetchAttendee(token) }) { Text("使用") }
+        TextButton(onClick = { if (token.isNotBlank()) vm.updateAttendee(token) }) { Text("使用") }
       },
       dismissButton = { TextButton(onClick = { navigator.popBackStack() }) { Text("取消") } },
       title = { Column { Text("輸入票券代碼") } },
@@ -40,7 +39,6 @@ fun EnterTokenView(
             value = token,
             onValueChange = { token = it },
             singleLine = true,
-            isError = errorMessage.value.isNotBlank(),
         )
       },
   )

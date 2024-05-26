@@ -1,21 +1,26 @@
 package app.opass.ccip.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.opass.ccip.model.CcipModel
+import app.opass.ccip.model.Announcement
+import app.opass.ccip.source.ccip.CcipClient
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class AnnouncementViewModel : ViewModel(), KoinComponent {
-  private val ccipModel: CcipModel by inject()
-  private val dispatcher: CoroutineDispatcher by inject()
+  private val ccipClient by inject<CcipClient>()
+  private val dispatcher by inject<CoroutineDispatcher>()
 
-  val announcements = ccipModel.announcements
+  var announcements by mutableStateOf<List<Announcement>>(emptyList())
 
-  fun loadAnnouncements() {
-    val token = ccipModel.attendee.value?.token
-    viewModelScope.launch(dispatcher) { ccipModel.fetchAnnouncements(token) }
+  fun updateAnnouncements() {
+    viewModelScope.launch(dispatcher) {
+      ccipClient.updateAnnouncements().onSuccess { announcements = it }
+    }
   }
 }

@@ -1,48 +1,32 @@
 package app.opass.ccip.viewmodel
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.opass.ccip.model.CcipModel
-import app.opass.ccip.model.InternalUrlEventFeature
-import app.opass.ccip.model.PortalModel
+import app.opass.ccip.model.Event
+import app.opass.ccip.source.portal.PortalClient
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SwitchEventViewModel : ViewModel(), KoinComponent {
-  private val portalModel: PortalModel by inject()
-  private val ccipModel: CcipModel by inject()
+  private val portalClient: PortalClient by inject()
   private val dispatcher: CoroutineDispatcher by inject()
-
-  val events = portalModel.events
-
-  private var _eventState = mutableStateOf(EventState.INIT)
-  val eventState: State<EventState> = _eventState
+  var events by mutableStateOf(emptyList<Event>())
+  var eventState by mutableStateOf(EventState.INIT)
 
   fun fetchEvents() {
-    viewModelScope.launch(dispatcher) { portalModel.fetchEvents() }
+    viewModelScope.launch(dispatcher) { portalClient.updateEvents().onSuccess { events = it } }
   }
 
   fun fetchEventConfig(eventId: String) {
     viewModelScope.launch(dispatcher) {
-      _eventState.value = EventState.PROCESSING
-      portalModel.fetchEventConfig(eventId)
-      portalModel.eventConfig.collectLatest { config ->
-        val feature =
-            config?.features?.firstOrNull { it.type == "fastpass" } as? InternalUrlEventFeature
-        if (feature != null) {
-          ccipModel.baseUrl = feature.url
-        }
-        _eventState.value = EventState.DONE
-      }
+      eventState = EventState.PROCESSING
+      portalClient.updateEventConfig(eventId)
+      eventState = EventState.DONE
     }
-  }
-
-  fun reset() {
-    _eventState.value = EventState.INIT
   }
 }

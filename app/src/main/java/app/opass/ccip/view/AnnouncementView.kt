@@ -53,15 +53,16 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.androidx.compose.koinViewModel
 
 @Destination
 @Composable
 fun AnnouncementView(
     navigator: DestinationsNavigator,
-    vm: AnnouncementViewModel = navGraphViewModel()
+    vm: AnnouncementViewModel = koinViewModel()
 ) {
-  LaunchedEffect(Unit) { vm.loadAnnouncements() }
-  val announcements = vm.announcements.cASWL().value.toImmutableList()
+  LaunchedEffect(Unit) { vm.updateAnnouncements() }
+  val announcements = vm.announcements.toImmutableList()
   AnnouncementScreen(navigator, announcements)
 }
 

@@ -1,24 +1,7 @@
 package app.opass.ccip.model
 
 import app.opass.ccip.misc.I18nText
-import app.opass.ccip.source.schedule.RemoteScheduleClient
 import java.net.URL
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.datetime.TimeZone
-import org.koin.core.component.KoinComponent
-
-class ScheduleModel(private val remote: RemoteScheduleClient) : KoinComponent {
-  private val _sessions = MutableStateFlow<List<Session>>(emptyList())
-  val sessions: StateFlow<List<Session>> = _sessions
-
-  suspend fun fetchSessions(url: URL, fallbackTimeZone: TimeZone) {
-    remote.getSessions(url, fallbackTimeZone).onSuccess { v ->
-      _sessions.update { v.sortedBy { it.dateTime.start } }
-    }
-  }
-}
 
 data class Session(
     val id: String,

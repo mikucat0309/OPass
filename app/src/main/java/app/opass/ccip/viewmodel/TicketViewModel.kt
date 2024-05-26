@@ -1,12 +1,12 @@
 package app.opass.ccip.viewmodel
 
 import androidx.lifecycle.ViewModel
-import app.opass.ccip.model.CcipModel
+import app.opass.ccip.model.MainModel
+import kotlinx.coroutines.flow.asStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class TicketViewModel : ViewModel(), KoinComponent {
-  private val ccipModel: CcipModel by inject()
-
-  val attendee = ccipModel.attendee
+  private val mainModel by inject<MainModel>()
+  val attendee = mainModel.attendee.asStateFlow()
 }
