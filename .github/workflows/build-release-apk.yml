@@ -22,7 +22,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.4
+          gradle-version: wrapper
 
       - name: Build APK
         run: gradle :app:assembleRelease

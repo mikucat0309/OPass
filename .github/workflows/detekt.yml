@@ -32,12 +32,12 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.4
+          gradle-version: wrapper
 
       - name: Run Detekt
         continue-on-error: true
         run: gradle :app:detekt
 
-      - uses: github/codeql-action/upload-sarif@v2
+      - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: app/build/reports/detekt/detekt.sarif
