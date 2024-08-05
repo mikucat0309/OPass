@@ -5,9 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'app/config/detekt.yml'
+      - .github/workflows/detekt.yml
+      - app/config/detekt.yml
       - 'app/src/main/java/**'
       - 'app/src/test/java/**'
+      - 'app/src/local/kotlin/**'
+      - 'app/src/debug/kotlin/**'
+      - 'app/src/release/kotlin/**'
   pull_request:
     branches:
       - main
@@ -30,13 +34,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: wrapper
 
       - name: Run Detekt
         continue-on-error: true
-        run: gradle :app:detekt
+        run: ./gradlew :app:detekt
 
       - uses: github/codeql-action/upload-sarif@v3
         with:
