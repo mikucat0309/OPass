@@ -2,10 +2,10 @@ import io.gitlab.arturbosch.detekt.Detekt
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-  id("com.android.application") version "8.3.0"
-  id("org.jetbrains.kotlin.android") version "1.9.22"
-  id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
-  id("com.google.devtools.ksp") version "1.9.22-1.0.18"
+  id("com.android.application") version "8.5.1"
+  id("org.jetbrains.kotlin.android") version "1.9.24"
+  id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24"
+  id("com.google.devtools.ksp") version "1.9.24-1.0.20"
   id("com.ncorti.ktfmt.gradle") version "0.17.0"
   id("io.gitlab.arturbosch.detekt") version "1.23.5"
   id("com.github.ben-manes.versions") version "0.51.0"
@@ -66,7 +66,7 @@ android {
     compose = true
   }
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.10"
+    kotlinCompilerExtensionVersion = "1.5.14"
   }
   packaging {
     resources {
@@ -104,28 +104,31 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 }
 
 dependencies {
-  val composeVersion = "1.6.2"
   val ktorVersion = "2.3.8"
   val lifecycleVersion = "2.7.0"
 
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.24"))
+  implementation("org.jetbrains.kotlin", "kotlin-stdlib")
+
   implementation("androidx.core", "core-ktx", "1.12.0")
 
-  implementation(platform("androidx.compose:compose-bom:2024.02.01"))
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.22"))
   implementation("androidx.lifecycle", "lifecycle-runtime-ktx", lifecycleVersion)
-
-  // Jetpack Compose
-  implementation("androidx.compose.ui", "ui", composeVersion)
-  implementation("androidx.compose.ui", "ui-graphics", composeVersion)
-  implementation("androidx.compose.ui", "ui-tooling-preview", composeVersion)
-  implementation("androidx.compose.material3", "material3", "1.2.0")
-  implementation("androidx.activity", "activity-compose", "1.8.2")
   implementation("androidx.lifecycle", "lifecycle-viewmodel-compose", lifecycleVersion)
   implementation("androidx.lifecycle", "lifecycle-runtime-compose", lifecycleVersion)
 
+  // Compose UI
+  implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+  implementation("androidx.compose.ui", "ui")
+  implementation("androidx.compose.ui", "ui-graphics")
+  implementation("androidx.compose.ui", "ui-tooling-preview")
+  debugImplementation("androidx.compose.ui", "ui-tooling")
+  debugImplementation("androidx.compose.ui", "ui-test-manifest")
+  implementation("androidx.compose.material3", "material3", "1.2.0")
+  implementation("androidx.activity", "activity-compose", "1.8.2")
+
   // Navigation
-  implementation("io.github.raamcosta.compose-destinations", "core", "1.10.1")
-  ksp("io.github.raamcosta.compose-destinations", "ksp", "1.10.1")
+  implementation("io.github.raamcosta.compose-destinations", "core", "2.0.0-beta11")
+  ksp("io.github.raamcosta.compose-destinations", "ksp", "2.0.0-beta11")
 
   // Async Image Loader
   implementation("io.coil-kt", "coil-base", "2.6.0")
@@ -144,6 +147,7 @@ dependencies {
   implementation("io.ktor", "ktor-client-content-negotiation", ktorVersion)
   implementation("io.ktor", "ktor-serialization-kotlinx-json", ktorVersion)
   implementation("io.ktor", "ktor-client-logging", ktorVersion)
+  testImplementation("io.ktor", "ktor-client-mock", ktorVersion)
   implementation("org.slf4j", "slf4j-android", "1.7.36")
 
   // DI
@@ -160,8 +164,4 @@ dependencies {
   // Unit Test
   testImplementation("org.jetbrains.kotlin", "kotlin-reflect", "1.9.22")
   testImplementation("io.kotest", "kotest-runner-junit5", "5.8.0")
-  testImplementation("io.ktor", "ktor-client-mock", ktorVersion)
-
-  debugImplementation("androidx.compose.ui", "ui-tooling", composeVersion)
-  debugImplementation("androidx.compose.ui", "ui-test-manifest", composeVersion)
 }

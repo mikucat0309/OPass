@@ -44,6 +44,7 @@ import app.opass.ccip.ui.theme.DefaultTheme
 import app.opass.ccip.ui.theme.Theme
 import app.opass.ccip.viewmodel.AnnouncementViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.net.URL
 import java.util.Locale
@@ -55,7 +56,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun AnnouncementView(
     navigator: DestinationsNavigator,

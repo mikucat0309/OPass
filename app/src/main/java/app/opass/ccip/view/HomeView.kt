@@ -49,11 +49,11 @@ import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
 import app.opass.ccip.ui.theme.DefaultTheme
 import app.opass.ccip.ui.theme.Theme
-import app.opass.ccip.view.destinations.SwitchEventViewDestination
 import app.opass.ccip.viewmodel.HomeViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.SwitchEventViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.util.Locale
 import kotlinx.collections.immutable.ImmutableList
@@ -61,8 +61,7 @@ import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
-@RootNavGraph(start = true)
-@Destination
+@Destination<RootGraph>(start = true)
 @Composable
 fun HomeView(
     navigator: DestinationsNavigator,

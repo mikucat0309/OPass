@@ -45,7 +45,7 @@ import app.opass.ccip.model.Session
 import app.opass.ccip.ui.theme.Theme
 import app.opass.ccip.viewmodel.ScheduleViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -57,8 +57,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
-@RootNavGraph(start = false)
-@Destination
+@Destination<RootGraph>
 @Composable
 fun ScheduleView(navigator: DestinationsNavigator, vm: ScheduleViewModel = koinViewModel()) {
   LaunchedEffect(Unit) { vm.fetchSessions() }

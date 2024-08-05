@@ -31,11 +31,12 @@ import app.opass.ccip.ui.theme.Theme
 import app.opass.ccip.viewmodel.TicketViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun TicketView(
     navigator: DestinationsNavigator,

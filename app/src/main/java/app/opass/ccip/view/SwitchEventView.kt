@@ -24,17 +24,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.opass.ccip.model.Event
 import app.opass.ccip.ui.theme.Theme
-import app.opass.ccip.view.destinations.HomeViewDestination
 import app.opass.ccip.viewmodel.EventState
 import app.opass.ccip.viewmodel.SwitchEventViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.HomeViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun SwitchEventView(
     navigator: DestinationsNavigator,

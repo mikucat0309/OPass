@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import app.opass.ccip.misc.I18nText
-import app.opass.ccip.view.destinations.EnterTokenViewDestination
+import com.ramcosta.composedestinations.generated.destinations.EnterTokenViewDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import java.net.URL

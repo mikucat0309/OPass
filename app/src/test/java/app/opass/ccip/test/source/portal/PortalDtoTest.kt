@@ -12,9 +12,6 @@ import app.opass.ccip.source.portal.EventDateDto
 import app.opass.ccip.source.portal.EventDto
 import app.opass.ccip.source.portal.EventFeatureDto
 import app.opass.ccip.source.portal.EventFeatureWifiDto
-import app.opass.ccip.view.destinations.HomeViewDestination
-import app.opass.ccip.view.destinations.ScheduleViewDestination
-import app.opass.ccip.view.destinations.TicketViewDestination
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.net.URL

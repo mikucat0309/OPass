@@ -13,6 +13,7 @@ import app.opass.ccip.misc.LocalSystemLocaleList
 import app.opass.ccip.misc.toList
 import app.opass.ccip.ui.theme.DefaultTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.generated.NavGraphs
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.core.annotation.KoinExperimentalAPI

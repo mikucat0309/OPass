@@ -10,10 +10,10 @@ import app.opass.ccip.model.EventFeature
 import app.opass.ccip.model.ExternalUrlEventFeature
 import app.opass.ccip.model.InternalUrlEventFeature
 import app.opass.ccip.model.WifiEventFeature
-import app.opass.ccip.view.destinations.AnnouncementViewDestination
-import app.opass.ccip.view.destinations.HomeViewDestination
-import app.opass.ccip.view.destinations.ScheduleViewDestination
-import app.opass.ccip.view.destinations.TicketViewDestination
+import com.ramcosta.composedestinations.generated.destinations.AnnouncementViewDestination
+import com.ramcosta.composedestinations.generated.destinations.HomeViewDestination
+import com.ramcosta.composedestinations.generated.destinations.ScheduleViewDestination
+import com.ramcosta.composedestinations.generated.destinations.TicketViewDestination
 import java.net.URL
 import kotlinx.serialization.Serializable
 
