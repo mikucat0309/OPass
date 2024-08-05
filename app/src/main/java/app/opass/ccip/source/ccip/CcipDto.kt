@@ -26,7 +26,7 @@ data class AnnouncementDto(
               Locale.ENGLISH to msg_en,
               Locale.CHINESE to msg_zh,
           ),
-          URL(uri),
+          if (uri.isNotBlank()) URL(uri) else null,
       )
 }
 

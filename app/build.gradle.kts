@@ -104,7 +104,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 }
 
 dependencies {
-  val ktorVersion = "2.3.8"
+  val ktorVersion = "2.3.12"
   val lifecycleVersion = "2.7.0"
 
   implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.24"))

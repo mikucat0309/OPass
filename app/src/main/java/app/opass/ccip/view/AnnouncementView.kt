@@ -118,14 +118,16 @@ private fun Announcements(
 
 @Composable
 private fun DateDivider(date: LocalDate) {
-  Row(
-      Modifier.height(32.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(16.dp),
-  ) {
-    HorizontalDivider(Modifier.weight(1.0f))
-    Text("${date.monthNumber}/${date.dayOfMonth}", style = Theme.t.labelMedium)
-    HorizontalDivider(Modifier.weight(1.0f))
+  Surface {
+    Row(
+        Modifier.height(32.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+      HorizontalDivider(Modifier.weight(1.0f))
+      Text("${date.monthNumber}/${date.dayOfMonth}", style = Theme.t.labelMedium)
+      HorizontalDivider(Modifier.weight(1.0f))
+    }
   }
 }
 
@@ -133,12 +135,13 @@ private fun DateDivider(date: LocalDate) {
 private fun AnnouncementItem(announcement: Announcement) {
   val context = LocalContext.current
   val time = announcement.datetime.toLocalDateTime(TimeZone.currentSystemDefault()).time
-  Row(verticalAlignment = Alignment.Bottom) {
+  Row(Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.Bottom) {
     Surface(
-        Modifier.weight(1.0f, fill = false)
+        Modifier
+            .weight(1.0f, fill = false)
             .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 0.dp))
             .background(Theme.c.primary)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(16.dp),
         color = Theme.c.primary,
     ) {
       SelectionContainer {
@@ -160,7 +163,11 @@ private fun AnnouncementItem(announcement: Announcement) {
       }
     }
     Spacer(Modifier.width(4.dp))
-    Text("${time.hour}:${time.minute}", Modifier.width(30.dp), style = Theme.t.labelSmall)
+    Text(
+        String.format(Locale.US, "%02d:%02d", time.hour, time.minute),
+        Modifier.width(36.dp),
+        style = Theme.t.labelMedium,
+    )
   }
 }
 

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import app.opass.ccip.model.MainModel
+import app.opass.ccip.source.ccip.CcipClient
 import app.opass.ccip.source.local.Config
 import app.opass.ccip.source.local.JSONSerializer
 import app.opass.ccip.source.portal.PortalClient
@@ -25,8 +26,8 @@ import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
-import javax.net.ssl.SSLContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -37,6 +38,7 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import javax.net.ssl.SSLContext
 
 class MainApplication : Application() {
   override fun onCreate() {
@@ -66,7 +68,10 @@ class MainApplication : Application() {
               }
             }
           }
-          install(ContentNegotiation) { json(get()) }
+          install(ContentNegotiation) {
+            json(get())
+            json(get(), ContentType.Text.Html)
+          }
           install(Logging) {
             logger = Logger.ANDROID
             level = if (config.debug) LogLevel.ALL else LogLevel.NONE
@@ -82,6 +87,7 @@ class MainApplication : Application() {
 
     val sourceModule = module {
       single { PortalClient(get(), get(), config.portalBaseUrl) }
+      single { CcipClient(get(), get()) }
       single {
         ImageLoader.Builder(androidContext())
             .apply { if (config.debug) logger(DebugLogger()) }
